@@ -3,7 +3,7 @@ import { Send, AlertCircle, RefreshCw } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useWallet } from '../hooks/useWallet'
 import { sendXLM } from '../lib/stellar'
-import TxStatus from '../components/TxStatus'
+import TxStatus, { type TxState } from '../components/TxStatus'
 import Spinner from '../components/Spinner'
 import { shortAddress } from '../utils/helpers'
 
@@ -15,6 +15,8 @@ export default function SendXLM() {
   const [loading, setLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
   const [txHash, setTxHash] = useState<string | null>(null)
+  const [txStatus, setTxStatus] = useState<TxState | null>(null)
+  const [txError, setTxError] = useState<string | null>(null)
 
   const handleRefresh = async () => {
     setRefreshing(true)
@@ -38,17 +40,28 @@ export default function SendXLM() {
 
     setLoading(true)
     setTxHash(null)
+    setTxStatus('pending')
+    setTxError(null)
     try {
       const hash = await sendXLM(publicKey, destination.trim(), amount, memo.trim() || undefined)
       setTxHash(hash)
+      setTxStatus('success')
       toast.success('XLM sent successfully!')
       setDestination('')
       setAmount('')
       setMemo('')
-      // Refresh balance after send
       await refreshBalance()
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : 'Transaction failed')
+      const msg = err instanceof Error ? err.message : 'Transaction failed'
+      // Classify insufficient balance error
+      const lower = msg.toLowerCase()
+      if (lower.includes('insufficient') || lower.includes('underfunded') || lower.includes('op_underfunded')) {
+        toast.error('Insufficient XLM balance. Fund your account via Friendbot.')
+      } else {
+        toast.error(msg)
+      }
+      setTxStatus('failed')
+      setTxError(msg)
     } finally {
       setLoading(false)
     }
@@ -96,7 +109,7 @@ export default function SendXLM() {
 
           {/* Send form */}
           <form onSubmit={handleSend} className="card space-y-4">
-            {txHash && <TxStatus hash={txHash} />}
+            {txStatus && <TxStatus hash={txHash ?? undefined} status={txStatus} error={txError ?? undefined} />}
 
             <div>
               <label className="label">Destination Address <span className="text-red-500">*</span></label>

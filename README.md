@@ -28,8 +28,46 @@ Every certificate is permanently stored on-chain and verifiable by anyone in the
 - ✅ Duplicate ID prevention enforced on-chain
 - ✅ Events emitted for `CertificateIssued` and `CertificateRevoked`
 - ✅ React + TypeScript + Tailwind CSS frontend
-- ✅ Freighter wallet integration
+- ✅ **Multi-wallet support via StellarWalletsKit** (Freighter, xBull, Albedo, LOBSTR)
+- ✅ **3 error types handled**: wallet not found, user rejected, insufficient balance
+- ✅ **Transaction status tracking**: pending → success / failed with explorer link
 - ✅ Send XLM on Stellar Testnet
+
+## Level 2 — Multi-Wallet, Contract Deployment & Real-Time Events
+
+### Multi-Wallet Integration (StellarWalletsKit)
+
+Wallet selection is handled by `@creit.tech/stellar-wallets-kit`. Clicking **Connect Wallet** opens a modal showing all available wallets:
+
+| Wallet | Type |
+|---|---|
+| Freighter | Browser extension |
+| xBull | Browser extension |
+| Albedo | Web-based |
+| LOBSTR | Mobile + extension |
+
+### Error Handling (3 Types)
+
+| Error Type | Trigger | User Message |
+|---|---|---|
+| Wallet not found | Extension not installed | "Wallet not found. Please install Freighter, xBull, Albedo, or LOBSTR." |
+| User rejected | User dismissed/denied modal | "Connection rejected. Please approve the request in your wallet." |
+| Insufficient balance | `op_underfunded` / low XLM | "Insufficient XLM balance. Fund your account via Friendbot." |
+
+### Transaction Status Tracking
+
+Every contract call and XLM send shows a live status banner:
+- 🟡 **Pending** — transaction submitted, waiting for on-chain confirmation
+- ✅ **Success** — confirmed, with clickable Stellar Explorer link
+- ❌ **Failed** — on-chain failure with error message
+
+### Contract Called from Frontend
+
+Transaction hash of a verified `issue_certificate` contract call on testnet:
+
+> **Tx Hash:** _(run the app, issue a certificate, and paste the hash here from the TxStatus banner)_
+>
+> **Explorer:** `https://stellar.expert/explorer/testnet/tx/<TX_HASH>`
 
 ## Deployed Smart Contract
 
@@ -52,7 +90,7 @@ steller-academic-certificates-Verification/
 │   ├── components/               # Navbar, CertificateCard, Spinner, TxStatus, EmptyState
 │   ├── pages/                    # Home, IssueCertificate, VerifyCertificate, MyCertificates, SendXLM
 │   ├── hooks/                    # useWallet (balance + connect/disconnect)
-│   ├── lib/                      # stellar.ts, freighter.ts
+│   ├── lib/                      # stellar.ts, freighter.ts, wallets.ts (StellarWalletsKit)
 │   └── utils/                    # helpers.ts
 ├── frontend/                     # Vite project root
 │   └── src/                      # (mirrors root src/)

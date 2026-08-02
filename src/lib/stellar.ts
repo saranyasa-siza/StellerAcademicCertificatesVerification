@@ -11,7 +11,7 @@ import {
   Operation,
   Memo,
 } from '@stellar/stellar-sdk'
-import { signTx } from './freighter'
+import { signWithKit } from './wallets'
 
 export const CONTRACT_ID = import.meta.env.VITE_CONTRACT_ID as string
 export const RPC_URL = import.meta.env.VITE_RPC_URL as string
@@ -73,7 +73,7 @@ export async function sendXLM(
   const tx = txBuilder.setTimeout(30).build()
 
   // Sign with Freighter
-  const signedXdr = await signTx(tx.toXDR(), NETWORK_PASSPHRASE)
+  const signedXdr = await signWithKit(tx.toXDR(), NETWORK_PASSPHRASE)
 
   // Submit to Horizon
   const signedTx = TransactionBuilder.fromXDR(signedXdr, NETWORK_PASSPHRASE)
@@ -162,7 +162,7 @@ export async function sendContractTransaction(
   if (rpc.Api.isSimulationError(simResult)) throw new Error(simResult.error)
 
   const preparedTx = rpc.assembleTransaction(tx, simResult).build()
-  const signedXdr = await signTx(preparedTx.toXDR(), NETWORK_PASSPHRASE)
+  const signedXdr = await signWithKit(preparedTx.toXDR(), NETWORK_PASSPHRASE)
 
   const signedTx = TransactionBuilder.fromXDR(signedXdr, NETWORK_PASSPHRASE)
   const sendResult = await server.sendTransaction(signedTx)

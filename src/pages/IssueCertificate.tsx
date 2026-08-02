@@ -4,7 +4,7 @@ import toast from 'react-hot-toast'
 import { useWallet } from '../hooks/useWallet'
 import { issueCertificate, certificateExists } from '../lib/stellar'
 import { generateCertHash } from '../utils/helpers'
-import TxStatus from '../components/TxStatus'
+import TxStatus, { type TxState } from '../components/TxStatus'
 import Spinner from '../components/Spinner'
 
 interface FormState {
@@ -30,6 +30,8 @@ export default function IssueCertificate() {
   const [form, setForm] = useState<FormState>(empty)
   const [loading, setLoading] = useState(false)
   const [txHash, setTxHash] = useState<string | null>(null)
+  const [txStatus, setTxStatus] = useState<TxState | null>(null)
+  const [txError, setTxError] = useState<string | null>(null)
 
   const set = (field: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm((f) => ({ ...f, [field]: e.target.value }))
@@ -47,6 +49,8 @@ export default function IssueCertificate() {
 
     setLoading(true)
     setTxHash(null)
+    setTxStatus('pending')
+    setTxError(null)
     try {
       // Check for duplicate ID before submitting
       const exists = await certificateExists(form.id.trim())
@@ -80,10 +84,13 @@ export default function IssueCertificate() {
       )
 
       setTxHash(txhash)
+      setTxStatus('success')
       toast.success('Certificate issued on-chain!')
       setForm(empty)
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Transaction failed'
+      setTxStatus('failed')
+      setTxError(msg)
       toast.error(msg)
     } finally {
       setLoading(false)
@@ -114,7 +121,7 @@ export default function IssueCertificate() {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="card space-y-5">
-          {txHash && <TxStatus hash={txHash} />}
+          {txStatus && <TxStatus hash={txHash ?? undefined} status={txStatus} error={txError ?? undefined} />}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div className="sm:col-span-2">
