@@ -122,6 +122,15 @@ fn test_duplicate_id_rejected() {
 }
 
 #[test]
+fn test_certificate_not_exists() {
+    let env = Env::default();
+    let contract_id = env.register(CertChainContract, ());
+    let client = CertChainContractClient::new(&env, &contract_id);
+
+    assert!(!client.certificate_exists(&s(&env, "NONEXISTENT-999")));
+}
+
+#[test]
 #[should_panic(expected = "only the original issuer can revoke")]
 fn test_wrong_issuer_cannot_revoke() {
     let env = Env::default();

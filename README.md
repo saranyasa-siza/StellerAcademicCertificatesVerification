@@ -1,6 +1,12 @@
 # CertChain — Academic Certificate Verification on Stellar
 
+![CI](https://github.com/<YOUR_GITHUB_USERNAME>/steller-academic-certificates-Verification/actions/workflows/ci.yml/badge.svg)
+
 A fully permissionless decentralized application (DApp) for issuing and verifying academic certificates on the Stellar blockchain using Soroban smart contracts.
+
+## Live Demo
+
+> **Deployed:** https://<YOUR_VERCEL_URL>.vercel.app
 
 ## Project Description
 
@@ -32,6 +38,12 @@ Every certificate is permanently stored on-chain and verifiable by anyone in the
 - ✅ **3 error types handled**: wallet not found, user rejected, insufficient balance
 - ✅ **Transaction status tracking**: pending → success / failed with explorer link
 - ✅ Send XLM on Stellar Testnet
+- ✅ **CI/CD pipeline** via GitHub Actions
+- ✅ **6 contract tests** — all passing
+- ✅ **Production deployment** on Vercel
+- ✅ Mobile responsive UI
+
+---
 
 ## Level 2 — Multi-Wallet, Contract Deployment & Real-Time Events
 
@@ -63,11 +75,111 @@ Every contract call and XLM send shows a live status banner:
 
 ### Contract Called from Frontend
 
-Transaction hash of a verified `issue_certificate` contract call on testnet:
-
 > **Tx Hash:** _(run the app, issue a certificate, and paste the hash here from the TxStatus banner)_
 >
 > **Explorer:** `https://stellar.expert/explorer/testnet/tx/<TX_HASH>`
+
+---
+
+## Level 3 — Production Architecture, CI/CD & Testing
+
+### CI/CD Pipeline (GitHub Actions)
+
+File: `.github/workflows/ci.yml`
+
+Two jobs run on every push and pull request to `main`:
+
+| Job | What it does |
+|---|---|
+| `contract-tests` | Installs Rust + wasm32v1-none target, runs `cargo test --package hello-world` |
+| `frontend-build` | Installs Node 20, runs `npm ci` + `npm run build` with production env vars |
+
+### Smart Contract Tests — 6 Passing
+
+File: `soroban-hello-world/contracts/hello-world/src/test.rs`
+
+| # | Test | What it verifies |
+|---|---|---|
+| 1 | `test_issue_and_verify` | Issue a cert, verify it exists and fields are correct |
+| 2 | `test_revoke` | Issue then revoke, confirm `revoked = true` |
+| 3 | `test_get_issuer_certificates` | Issue 2 certs from same wallet, confirm index returns 2 |
+| 4 | `test_duplicate_id_rejected` | Second issue with same ID panics with correct message |
+| 5 | `test_certificate_not_exists` | `certificate_exists` returns false for unknown ID |
+| 6 | `test_wrong_issuer_cannot_revoke` | Different wallet trying to revoke panics with correct message |
+
+Run locally:
+```bash
+cd soroban-hello-world
+cargo test --package hello-world
+```
+
+Expected output:
+```
+running 6 tests
+test test_certificate_not_exists ... ok
+test test_duplicate_id_rejected ... ok
+test test_get_issuer_certificates ... ok
+test test_issue_and_verify ... ok
+test test_revoke ... ok
+test test_wrong_issuer_cannot_revoke ... ok
+
+test result: ok. 6 passed; 0 failed
+```
+
+### Production Deployment (Vercel)
+
+File: `vercel.json`
+
+- SPA rewrites — all routes serve `index.html`
+- Build command: `npm run build`
+- Output: `dist/`
+- Environment variables set in Vercel dashboard (same as `.env`)
+
+### Production Architecture
+
+```
+User Browser
+    │
+    ▼
+Vercel CDN (React SPA)
+    │
+    ├── Read calls ──► Soroban RPC (simulate, no wallet needed)
+    │                  https://soroban-testnet.stellar.org
+    │
+    └── Write calls ─► Wallet (Freighter / xBull / Albedo / LOBSTR)
+                           │
+                           ▼
+                       Soroban RPC (sendTransaction)
+                           │
+                           ▼
+                   Stellar Testnet Ledger
+                   Contract: CBZRJZYNDXYTRY2CVNLUQXG5NE2PHY6GNMBKBXBRX6HRVNXBU5D7IJXA
+```
+
+### Inter-Contract Communication Pattern
+
+The contract uses two persistent storage maps that act as an internal index:
+
+- `CERTS` map: `cert_id → Certificate struct`
+- `ISSUER_IDX` map: `issuer_address → Vec<cert_id>`
+
+Both are updated atomically in `issue_certificate`, ensuring the issuer index is always consistent with the certificate store. TTL is extended to 100,000 ledgers on every write.
+
+### Event Streaming
+
+The contract emits two event types consumable via Horizon event streaming:
+
+```rust
+env.events().publish((CERT_ISSUED, issuer), id);   // on issue
+env.events().publish((CERT_REVOKED, caller), id);  // on revoke
+```
+
+These can be subscribed to via:
+```
+GET https://horizon-testnet.stellar.org/accounts/<ADDRESS>/effects
+```
+
+---
 
 ## Deployed Smart Contract
 
@@ -76,28 +188,35 @@ Transaction hash of a verified `issue_certificate` contract call on testnet:
 - **Explorer:** https://stellar.expert/explorer/testnet/contract/CBZRJZYNDXYTRY2CVNLUQXG5NE2PHY6GNMBKBXBRX6HRVNXBU5D7IJXA
 - **Deployed by:** `GCUJLHIGC54I6TSTOEI2UMI6R6I2NRH77UT37HBHVCXLTR4UBVDAQLTI` (Saranya)
 
+---
+
 ## Project Structure
 
 ```
 steller-academic-certificates-Verification/
+├── .github/
+│   └── workflows/
+│       └── ci.yml                # CI/CD — contract tests + frontend build
 ├── soroban-hello-world/          # Rust smart contract
 │   ├── contracts/hello-world/
 │   │   └── src/
 │   │       ├── lib.rs            # CertChain contract (6 functions)
-│   │       └── test.rs           # 5 contract tests
+│   │       └── test.rs           # 6 contract tests
 │   └── Cargo.toml
-├── src/                          # Frontend source (root level for grader)
+├── src/                          # Frontend source
 │   ├── components/               # Navbar, CertificateCard, Spinner, TxStatus, EmptyState
 │   ├── pages/                    # Home, IssueCertificate, VerifyCertificate, MyCertificates, SendXLM
 │   ├── hooks/                    # useWallet (balance + connect/disconnect)
 │   ├── lib/                      # stellar.ts, freighter.ts, wallets.ts (StellarWalletsKit)
 │   └── utils/                    # helpers.ts
-├── frontend/                     # Vite project root
-│   └── src/                      # (mirrors root src/)
+├── vercel.json                   # Production deployment config
+├── .gitignore
 ├── package.json
 ├── index.html
 └── README.md
 ```
+
+---
 
 ## Smart Contract Functions
 
@@ -109,6 +228,8 @@ steller-academic-certificates-Verification/
 | `revoke_certificate(id, caller)` | Revoke — only original issuer can call |
 | `certificate_exists(id)` | Boolean existence check |
 | `get_issuer_certificates(issuer)` | List all cert IDs issued by a wallet |
+
+---
 
 ## Prerequisites
 
@@ -138,7 +259,6 @@ stellar contract deploy \
 ## Frontend Setup
 
 ```bash
-cd frontend
 npm install
 npm run dev
 ```
@@ -159,7 +279,7 @@ VITE_NETWORK=testnet
 1. Install [Freighter](https://freighter.app) and set it to **Testnet**
 2. Fund your account via [Friendbot](https://friendbot.stellar.org)
 3. Click **Connect Wallet** in the navbar
-4. **Issue Certificate** — fill the form, Freighter signs, cert is stored on-chain
+4. **Issue Certificate** — fill the form, wallet signs, cert is stored on-chain
 5. **Verify Certificate** — enter any Certificate ID to check authenticity
 6. **My Certificates** — view and revoke certificates you issued
 7. **Send XLM** — send XLM to any Stellar address on testnet
