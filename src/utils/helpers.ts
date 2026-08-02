@@ -9,7 +9,7 @@ export async function generateCertHash(fields: {
 }): Promise<string> {
   const data = JSON.stringify(fields)
   const encoded = new TextEncoder().encode(data)
-  const hashBuffer = await crypto.subtle.digest('SHA-256', encoded)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', encoded.buffer as ArrayBuffer)
   return Array.from(new Uint8Array(hashBuffer))
     .map((b) => b.toString(16).padStart(2, '0'))
     .join('')
