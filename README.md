@@ -80,9 +80,9 @@ Every contract call and XLM send shows a live status banner:
 
 ### Contract Called from Frontend
 
-> **Tx Hash:** _(run the app, issue a certificate, and paste the hash here from the TxStatus banner)_
+> **Tx Hash:** f577d68623bf4ddf1112dd85d7908dd47bdc3e546f19a5ae6fea0b38efca5d86
 >
-> **Explorer:** `https://stellar.expert/explorer/testnet/tx/<TX_HASH>`
+> **Explorer:** `https://stellar.expert/explorer/testnet/tx/f577d68623bf4ddf1112dd85d7908dd47bdc3e546f19a5ae6fea0b38efca5d86`
 
 ---
 
@@ -191,7 +191,7 @@ GET https://horizon-testnet.stellar.org/accounts/<ADDRESS>/effects
 - **Network:** Stellar Testnet
 - **Contract ID:** `CBZRJZYNDXYTRY2CVNLUQXG5NE2PHY6GNMBKBXBRX6HRVNXBU5D7IJXA`
 - **Explorer:** https://stellar.expert/explorer/testnet/contract/CBZRJZYNDXYTRY2CVNLUQXG5NE2PHY6GNMBKBXBRX6HRVNXBU5D7IJXA
-- **Deployed by:** `GCUJLHIGC54I6TSTOEI2UMI6R6I2NRH77UT37HBHVCXLTR4UBVDAQLTI` (Saranya)
+- **Deployed by:** `GCUJLHIGC54I6TSTOEI2UMI6R6I2NRH77UT37HBHVCXLTR4UBVDAQLTI` 
 
 ---
 
