@@ -1,12 +1,13 @@
 # CertChain — Academic Certificate Verification on Stellar
+<img width="1919" height="904" alt="Screenshot 2026-08-02 143300" src="https://github.com/user-attachments/assets/52f4d6b0-46e8-460b-82c6-ab2933a88944" />
 
-![CI](https://github.com/<YOUR_GITHUB_USERNAME>/steller-academic-certificates-Verification/actions/workflows/ci.yml/badge.svg)
+
 
 A fully permissionless decentralized application (DApp) for issuing and verifying academic certificates on the Stellar blockchain using Soroban smart contracts.
 
 ## Live Demo
 
-> **Deployed:** https://<YOUR_VERCEL_URL>.vercel.app
+> **Deployed:** https://steller-academic-certificates-verif.vercel.app/
 
 ## Project Description
 
