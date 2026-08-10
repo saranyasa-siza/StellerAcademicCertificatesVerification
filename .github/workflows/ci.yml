@@ -42,14 +42,12 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-          cache-dependency-path: 'frontend/package-lock.json'
+          cache-dependency-path: 'package-lock.json'
 
       - name: Install dependencies
-        working-directory: frontend
         run: npm ci
 
       - name: Build
-        working-directory: frontend
         run: npm run build
         env:
           VITE_CONTRACT_ID: CBZRJZYNDXYTRY2CVNLUQXG5NE2PHY6GNMBKBXBRX6HRVNXBU5D7IJXA
