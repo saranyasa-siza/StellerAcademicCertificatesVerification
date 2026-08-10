@@ -92,7 +92,7 @@ Two jobs run on every push and pull request to `main`:
 | Job | What it does |
 |---|---|
 | `contract-tests` | Installs Rust + wasm32v1-none target, runs `cargo test --package hello-world` |
-| `frontend-build` | Installs Node 20, runs `npm ci` + `npm run build` with production env vars |
+| `frontend-build` | Installs Node 22, runs `npm install` + `npm run build` with production env vars |
 
 ### Smart Contract Tests — 6 Passing
 
@@ -196,23 +196,60 @@ GET https://horizon-testnet.stellar.org/accounts/<ADDRESS>/effects
 steller-academic-certificates-Verification/
 ├── .github/
 │   └── workflows/
-│       └── ci.yml                # CI/CD — contract tests + frontend build
-├── soroban-hello-world/          # Rust smart contract
+│       └── ci.yml                    # CI/CD — contract tests + frontend build
+├── frontend/                         # Duplicate frontend (legacy, not used by CI)
+│   ├── src/
+│   │   ├── components/               # Navbar, CertificateCard, Spinner, TxStatus, EmptyState
+│   │   ├── hooks/
+│   │   │   └── useWallet.ts
+│   │   ├── lib/                      # stellar.ts, freighter.ts, wallets.ts
+│   │   ├── pages/                    # Home, IssueCertificate, VerifyCertificate, MyCertificates, SendXLM
+│   │   ├── utils/
+│   │   │   └── helpers.ts
+│   │   ├── App.tsx
+│   │   ├── index.css
+│   │   ├── main.tsx
+│   │   └── vite-env.d.ts
+│   ├── index.html
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── tailwind.config.js
+│   ├── tsconfig.json
+│   └── vite.config.ts
+├── soroban-hello-world/              # Rust smart contract
 │   ├── contracts/hello-world/
-│   │   └── src/
-│   │       ├── lib.rs            # CertChain contract (6 functions)
-│   │       └── test.rs           # 6 contract tests
+│   │   ├── src/
+│   │   │   ├── lib.rs                # CertChain contract (6 functions)
+│   │   │   └── test.rs               # 6 contract tests
+│   │   ├── Cargo.toml
+│   │   └── Makefile
+│   ├── Cargo.lock
 │   └── Cargo.toml
-├── src/                          # Frontend source
-│   ├── components/               # Navbar, CertificateCard, Spinner, TxStatus, EmptyState
-│   ├── pages/                    # Home, IssueCertificate, VerifyCertificate, MyCertificates, SendXLM
-│   ├── hooks/                    # useWallet (balance + connect/disconnect)
-│   ├── lib/                      # stellar.ts, freighter.ts, wallets.ts (StellarWalletsKit)
-│   └── utils/                    # helpers.ts
-├── vercel.json                   # Production deployment config
+├── src/                              # Frontend source (active — used by CI & Vercel)
+│   ├── components/                   # Navbar, CertificateCard, Spinner, TxStatus, EmptyState
+│   ├── hooks/
+│   │   └── useWallet.ts              # Wallet balance + connect/disconnect
+│   ├── lib/
+│   │   ├── freighter.ts
+│   │   ├── stellar.ts
+│   │   └── wallets.ts                # StellarWalletsKit setup
+│   ├── pages/                        # Home, IssueCertificate, VerifyCertificate, MyCertificates, SendXLM
+│   ├── utils/
+│   │   └── helpers.ts
+│   ├── App.tsx
+│   ├── index.css
+│   ├── main.tsx
+│   └── vite-env.d.ts
+├── .env                              # Local environment variables
 ├── .gitignore
-├── package.json
 ├── index.html
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── tailwind.config.js
+├── tsconfig.json
+├── vercel.json                       # Production deployment config
+├── vite.config.ts
 └── README.md
 ```
 
