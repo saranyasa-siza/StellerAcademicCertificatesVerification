@@ -1,6 +1,10 @@
 # CertChain — Academic Certificate Verification on Stellar
-<img width="1919" height="904" alt="Screenshot 2026-08-02 143300" src="https://github.com/user-attachments/assets/52f4d6b0-46e8-460b-82c6-ab2933a88944" />
 
+<img width="1919" height="898" alt="Screenshot 2026-08-02 142113" src="https://github.com/user-attachments/assets/8b31c1bf-3c26-4681-b0d8-73c463e4bb49" />
+
+<img width="1919" height="908" alt="Screenshot 2026-08-02 143239" src="https://github.com/user-attachments/assets/697e706a-e73b-4200-8fac-08393ae8cfc8" />
+
+<img width="1919" height="904" alt="Screenshot 2026-08-02 143300" src="https://github.com/user-attachments/assets/52f4d6b0-46e8-460b-82c6-ab2933a88944" />
 
 
 A fully permissionless decentralized application (DApp) for issuing and verifying academic certificates on the Stellar blockchain using Soroban smart contracts.
