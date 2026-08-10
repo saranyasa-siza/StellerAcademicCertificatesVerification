@@ -10,6 +10,7 @@
 A fully permissionless decentralized application (DApp) for issuing and verifying academic certificates on the Stellar blockchain using Soroban smart contracts.
 
 ## Live Demo
+https://drive.google.com/file/d/1C-a3aEQ4QCATM9sjyQY3Y44_ZHWgIe6T/view?usp=sharing
 
 > **Deployed:** https://steller-academic-certificates-verif.vercel.app/
 
