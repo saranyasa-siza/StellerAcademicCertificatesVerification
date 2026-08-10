@@ -278,6 +278,19 @@ VITE_NETWORK_PASSPHRASE=Test SDF Network ; September 2015
 VITE_RPC_URL=https://soroban-testnet.stellar.org
 VITE_NETWORK=testnet
 ```
+## Demo Video
+
+
+## Screenshots (Mobile Responsive UI)
+<img width="487" height="771" alt="Screenshot 2026-08-10 215402" src="https://github.com/user-attachments/assets/f99dd0e8-f904-495f-8792-f1acd969a148" />
+<img width="482" height="805" alt="Screenshot 2026-08-10 215453" src="https://github.com/user-attachments/assets/105402a3-940b-4cff-9bf2-ba863e6c56da" />
+
+## CI/CD Pipeline
+<img width="1893" height="525" alt="Screenshot 2026-08-10 215108" src="https://github.com/user-attachments/assets/aeaf7119-4124-46ac-a19b-222a8602fc09" />
+
+## Contract Tests Passing
+<img width="1408" height="557" alt="Screenshot 2026-08-10 205203" src="https://github.com/user-attachments/assets/21ddf5f8-01e2-4afe-af11-ffe8e795d3e4" />
+
 
 ## Usage
 
