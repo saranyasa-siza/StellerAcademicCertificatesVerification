@@ -8,7 +8,7 @@ const sizes = { sm: 'w-4 h-4', md: 'w-6 h-6', lg: 'w-8 h-8' }
 export default function Spinner({ size = 'md', className = '' }: Props) {
   return (
     <svg
-      className={`animate-spin text-brand-500 ${sizes[size]} ${className}`}
+      className={`animate-spin text-blue-500 ${sizes[size]} ${className}`}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"

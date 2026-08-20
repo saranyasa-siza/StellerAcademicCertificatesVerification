@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Award, AlertCircle, RefreshCw } from 'lucide-react'
+import { Award, AlertCircle, RefreshCw, LayoutDashboard } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useWallet } from '../hooks/useWallet'
 import { getIssuerCertificates, getCertificate, revokeCertificate, type Certificate } from '../lib/stellar'
@@ -36,12 +36,10 @@ export default function MyCertificates() {
   const handleRevoke = async (id: string) => {
     if (!publicKey) return
     if (!window.confirm(`Revoke certificate "${id}"? This cannot be undone.`)) return
-
     setRevoking(id)
     try {
       await revokeCertificate(id, publicKey)
       toast.success('Certificate revoked')
-      // Refresh the list
       await loadCerts()
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Revocation failed'
@@ -51,60 +49,77 @@ export default function MyCertificates() {
     }
   }
 
+  const active = certs.filter((c) => !c.revoked).length
+  const revoked = certs.filter((c) => c.revoked).length
+
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
-      <div className="flex items-center justify-between mb-8">
+
+      {/* Page header */}
+      <div className="flex items-start justify-between mb-8 gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-brand-100 flex items-center justify-center">
-            <Award className="w-5 h-5 text-brand-600" />
+          <div className="w-11 h-11 rounded-2xl bg-violet-600 flex items-center justify-center shadow-md shadow-violet-200">
+            <LayoutDashboard className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-800">My Certificates</h1>
-            <p className="text-sm text-slate-500">Certificates you have issued</p>
+            <h1 className="text-2xl font-extrabold text-slate-800">My Certificates</h1>
+            <p className="text-sm text-slate-500">Certificates issued from your wallet</p>
           </div>
         </div>
-        {connected && (
-          <button
-            onClick={loadCerts}
-            disabled={loading}
-            className="btn-secondary text-sm"
-          >
+        {connected && !loading && certs.length > 0 && (
+          <button onClick={loadCerts} disabled={loading} className="btn-secondary text-sm shrink-0">
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             Refresh
           </button>
         )}
       </div>
 
+      {/* Stats row */}
+      {connected && !loading && certs.length > 0 && (
+        <div className="grid grid-cols-3 gap-3 mb-6">
+          {[
+            { label: 'Total', value: certs.length, color: 'text-slate-700', bg: 'bg-slate-50 border-slate-200' },
+            { label: 'Active', value: active, color: 'text-emerald-700', bg: 'bg-emerald-50 border-emerald-200' },
+            { label: 'Revoked', value: revoked, color: 'text-red-600', bg: 'bg-red-50 border-red-200' },
+          ].map((s) => (
+            <div key={s.label} className={`rounded-2xl border px-4 py-3 text-center ${s.bg}`}>
+              <p className={`text-2xl font-extrabold ${s.color}`}>{s.value}</p>
+              <p className="text-xs font-medium text-slate-500 mt-0.5">{s.label}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* States */}
       {!connected ? (
-        <div className="card text-center py-12">
-          <AlertCircle className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-          <p className="text-slate-600 font-medium mb-4">
-            Connect your wallet to view your certificates
-          </p>
-          <button onClick={connect} disabled={connecting} className="btn-primary">
+        <div className="card text-center py-14 border-dashed">
+          <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
+            <AlertCircle className="w-7 h-7 text-slate-400" />
+          </div>
+          <p className="text-slate-700 font-semibold mb-1">Wallet not connected</p>
+          <p className="text-sm text-slate-400 mb-6">Connect your wallet to view your issued certificates</p>
+          <button onClick={connect} disabled={connecting} className="btn-primary mx-auto">
             {connecting ? <><Spinner size="sm" /> Connecting…</> : 'Connect Wallet'}
           </button>
         </div>
       ) : loading ? (
-        <div className="flex justify-center py-16">
+        <div className="flex flex-col items-center justify-center py-20 gap-3">
           <Spinner size="lg" />
+          <p className="text-sm text-slate-500">Loading your certificates…</p>
         </div>
       ) : certs.length === 0 ? (
         <EmptyState
           icon={<Award className="w-8 h-8" />}
           title="No certificates yet"
-          description="You haven't issued any certificates from this wallet."
+          description="You haven't issued any certificates from this wallet address."
           action={
             <Link to="/issue" className="btn-primary">
-              Issue your first certificate
+              <Award className="w-4 h-4" /> Issue your first certificate
             </Link>
           }
         />
       ) : (
         <div className="space-y-4">
-          <p className="text-sm text-slate-500">
-            {certs.length} certificate{certs.length !== 1 ? 's' : ''} issued
-          </p>
           {certs.map((cert) => (
             <CertificateCard
               key={cert.id}

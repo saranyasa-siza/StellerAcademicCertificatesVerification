@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Send, AlertCircle, RefreshCw } from 'lucide-react'
+import { Send, AlertCircle, RefreshCw, Wallet, ExternalLink } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useWallet } from '../hooks/useWallet'
 import { sendXLM } from '../lib/stellar'
@@ -53,7 +53,6 @@ export default function SendXLM() {
       await refreshBalance()
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Transaction failed'
-      // Classify insufficient balance error
       const lower = msg.toLowerCase()
       if (lower.includes('insufficient') || lower.includes('underfunded') || lower.includes('op_underfunded')) {
         toast.error('Insufficient XLM balance. Fund your account via Friendbot.')
@@ -69,96 +68,129 @@ export default function SendXLM() {
 
   return (
     <div className="max-w-lg mx-auto px-4 sm:px-6 py-12">
+
+      {/* Page header */}
       <div className="flex items-center gap-3 mb-8">
-        <div className="w-10 h-10 rounded-xl bg-brand-100 flex items-center justify-center">
-          <Send className="w-5 h-5 text-brand-600" />
+        <div className="w-11 h-11 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-md shadow-indigo-200">
+          <Send className="w-5 h-5 text-white" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Send XLM</h1>
-          <p className="text-sm text-slate-500">Send XLM on Stellar Testnet</p>
+          <h1 className="text-2xl font-extrabold text-slate-800">Send XLM</h1>
+          <p className="text-sm text-slate-500">Transfer XLM on Stellar Testnet</p>
         </div>
       </div>
 
       {!connected ? (
-        <div className="card text-center py-12">
-          <AlertCircle className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-          <p className="text-slate-600 font-medium mb-4">Connect your wallet to send XLM</p>
-          <button onClick={connect} disabled={connecting} className="btn-primary">
+        <div className="card text-center py-14 border-dashed">
+          <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
+            <AlertCircle className="w-7 h-7 text-slate-400" />
+          </div>
+          <p className="text-slate-700 font-semibold mb-1">Wallet not connected</p>
+          <p className="text-sm text-slate-400 mb-6">Connect your Stellar wallet to send XLM</p>
+          <button onClick={connect} disabled={connecting} className="btn-primary mx-auto">
             {connecting ? <><Spinner size="sm" /> Connecting…</> : 'Connect Wallet'}
           </button>
         </div>
       ) : (
         <div className="space-y-4">
+
           {/* Balance card */}
-          <div className="card bg-gradient-to-br from-brand-600 to-brand-700 text-white">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-sm text-brand-200">Your Balance</span>
-              <button
-                onClick={handleRefresh}
-                disabled={refreshing}
-                className="text-brand-200 hover:text-white transition-colors"
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-blue-600 to-blue-700 text-white p-6 shadow-lg shadow-blue-200">
+            {/* Background decoration */}
+            <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
+
+            <div className="relative">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Wallet className="w-4 h-4 text-blue-200" />
+                  <span className="text-sm font-medium text-blue-200">Your Balance</span>
+                </div>
+                <button
+                  onClick={handleRefresh}
+                  disabled={refreshing}
+                  className="p-1.5 text-blue-200 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                  title="Refresh balance"
+                >
+                  <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+                </button>
+              </div>
+
+              <p className="text-4xl font-black tracking-tight mb-1">
+                {balance !== null ? (
+                  <>{parseFloat(balance).toFixed(4)} <span className="text-2xl font-bold text-blue-200">XLM</span></>
+                ) : '—'}
+              </p>
+              <p className="font-mono text-xs text-blue-300 mt-3">{shortAddress(publicKey!)}</p>
+
+              {/* Friendbot link */}
+              <a
+                href={`https://friendbot.stellar.org?addr=${publicKey}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs text-blue-200 hover:text-white mt-3 transition-colors"
               >
-                <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-              </button>
+                <ExternalLink className="w-3 h-3" />
+                Fund via Friendbot (Testnet)
+              </a>
             </div>
-            <p className="text-3xl font-bold tracking-tight">
-              {balance !== null ? `${balance} XLM` : '—'}
-            </p>
-            <p className="text-xs text-brand-300 mt-2 font-mono">{shortAddress(publicKey!)}</p>
           </div>
 
           {/* Send form */}
-          <form onSubmit={handleSend} className="card space-y-4">
+          <div className="card space-y-4">
             {txStatus && <TxStatus hash={txHash ?? undefined} status={txStatus} error={txError ?? undefined} />}
 
-            <div>
-              <label className="label">Destination Address <span className="text-red-500">*</span></label>
-              <input
-                className="input font-mono text-xs"
-                placeholder="G…"
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-                required
-              />
-            </div>
+            <form onSubmit={handleSend} className="space-y-4">
+              <div>
+                <label className="label">Destination Address <span className="text-red-400">*</span></label>
+                <input
+                  className="input font-mono text-xs"
+                  placeholder="G…"
+                  value={destination}
+                  onChange={(e) => setDestination(e.target.value)}
+                  required
+                />
+              </div>
 
-            <div>
-              <label className="label">Amount (XLM) <span className="text-red-500">*</span></label>
-              <input
-                className="input"
-                type="number"
-                min="0.0000001"
-                step="0.0000001"
-                placeholder="0.00"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                required
-              />
-            </div>
+              <div>
+                <label className="label">Amount (XLM) <span className="text-red-400">*</span></label>
+                <div className="relative">
+                  <input
+                    className="input pr-14"
+                    type="number"
+                    min="0.0000001"
+                    step="0.0000001"
+                    placeholder="0.00"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    required
+                  />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">XLM</span>
+                </div>
+              </div>
 
-            <div>
-              <label className="label">Memo (optional)</label>
-              <input
-                className="input"
-                placeholder="Optional text memo"
-                maxLength={28}
-                value={memo}
-                onChange={(e) => setMemo(e.target.value)}
-              />
-            </div>
+              <div>
+                <label className="label">
+                  Memo <span className="text-slate-400 font-normal text-xs">(optional, max 28 chars)</span>
+                </label>
+                <input
+                  className="input"
+                  placeholder="Optional text memo"
+                  maxLength={28}
+                  value={memo}
+                  onChange={(e) => setMemo(e.target.value)}
+                />
+              </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn-primary w-full justify-center"
-            >
-              {loading ? (
-                <><Spinner size="sm" /> Sending…</>
-              ) : (
-                <><Send className="w-4 h-4" /> Send XLM</>
-              )}
-            </button>
-          </form>
+              <button type="submit" disabled={loading} className="btn-primary w-full justify-center py-3 text-base">
+                {loading ? (
+                  <><Spinner size="sm" /> Sending…</>
+                ) : (
+                  <><Send className="w-5 h-5" /> Send XLM</>
+                )}
+              </button>
+            </form>
+          </div>
         </div>
       )}
     </div>
