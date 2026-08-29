@@ -32,7 +32,7 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-br from-brand-700 via-brand-600 to-brand-500 text-white">
+      <section className="bg-gradient-to-br from-brand-700/90 via-brand-600/85 to-brand-500/90 backdrop-blur-sm text-white relative overflow-hidden border-b border-brand-500/20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-1.5 rounded-full text-sm font-medium mb-6">
             <ShieldCheck className="w-4 h-4" />
