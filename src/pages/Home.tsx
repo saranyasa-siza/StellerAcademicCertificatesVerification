@@ -1,110 +1,166 @@
 import { Link } from 'react-router-dom'
-import { Award, ShieldCheck, Search, Users, Zap, Lock, Globe, ArrowRight } from 'lucide-react'
+import {
+  Award, ShieldCheck, Search, Users, Zap, Lock, Globe,
+  ArrowRight, FileText, Hash, Network, CheckCircle2, ChevronDown,
+} from 'lucide-react'
 import Logo from '../components/Logo'
+import StarField from '../components/StarField'
+import { useScrollReveal } from '../hooks/useScrollReveal'
 
+/* ── Scroll-reveal wrapper ── */
+function Reveal({ children, delay = '', className = '', dir = '' }: {
+  children: React.ReactNode; delay?: string; className?: string; dir?: string
+}) {
+  const ref = useScrollReveal()
+  return (
+    <div ref={ref} className={`reveal ${dir} ${delay} ${className}`}>
+      {children}
+    </div>
+  )
+}
+
+/* ── Data ── */
 const features = [
   {
-    icon: <Award className="w-5 h-5 text-blue-600" />,
+    icon: <Award className="w-5 h-5 text-blue-400" />,
     title: 'Issue Certificates',
-    description: 'Any wallet can issue tamper-proof academic or professional certificates directly on-chain. No approval needed.',
-    bg: 'bg-blue-50',
+    desc: 'Any wallet can issue tamper-proof academic or professional certificates directly on-chain. No approval needed.',
+    border: 'hover:border-blue-500/30',
+    glow: 'group-hover:shadow-blue-500/10',
   },
   {
-    icon: <ShieldCheck className="w-5 h-5 text-emerald-600" />,
+    icon: <ShieldCheck className="w-5 h-5 text-emerald-400" />,
     title: 'Verify Instantly',
-    description: 'Anyone can verify the authenticity of a certificate in seconds using just the Certificate ID.',
-    bg: 'bg-emerald-50',
+    desc: 'Anyone can verify the authenticity of a certificate in seconds using just the Certificate ID.',
+    border: 'hover:border-emerald-500/30',
+    glow: 'group-hover:shadow-emerald-500/10',
   },
   {
-    icon: <Search className="w-5 h-5 text-violet-600" />,
+    icon: <Search className="w-5 h-5 text-violet-400" />,
     title: 'Search & Explore',
-    description: 'Look up any certificate by ID. All data is permanently stored on the Stellar blockchain.',
-    bg: 'bg-violet-50',
+    desc: 'Look up any certificate by ID. All data is permanently stored on the Stellar blockchain.',
+    border: 'hover:border-violet-500/30',
+    glow: 'group-hover:shadow-violet-500/10',
   },
   {
-    icon: <Users className="w-5 h-5 text-orange-500" />,
+    icon: <Users className="w-5 h-5 text-cyan-400" />,
     title: 'No Central Authority',
-    description: 'No admin. No owner. Your wallet is your identity. The protocol is open to everyone.',
-    bg: 'bg-orange-50',
+    desc: 'No admin. No owner. Your wallet is your identity. The protocol is open to everyone.',
+    border: 'hover:border-cyan-500/30',
+    glow: 'group-hover:shadow-cyan-500/10',
   },
 ]
 
+const flowSteps = [
+  { icon: <FileText className="w-5 h-5" />,    label: 'Certificate',      sub: 'Issued on-chain' },
+  { icon: <Hash className="w-5 h-5" />,         label: 'SHA-256 Hash',     sub: 'Tamper detection' },
+  { icon: <Network className="w-5 h-5" />,      label: 'Stellar Network',  sub: 'Soroban contract' },
+  { icon: <CheckCircle2 className="w-5 h-5" />, label: '✓ Verified',       sub: 'Immutable record', highlight: true },
+]
+
 const stats = [
-  { label: 'Permissionless', icon: <Globe className="w-4 h-4" /> },
-  { label: 'On-chain Storage', icon: <Lock className="w-4 h-4" /> },
-  { label: 'Instant Verification', icon: <Zap className="w-4 h-4" /> },
-  { label: 'Multi-wallet Support', icon: <ShieldCheck className="w-4 h-4" /> },
+  { label: 'Permissionless',      icon: <Globe className="w-4 h-4" /> },
+  { label: 'On-chain Storage',    icon: <Lock className="w-4 h-4" /> },
+  { label: 'Instant Verification',icon: <Zap className="w-4 h-4" /> },
+  { label: 'Multi-wallet',        icon: <ShieldCheck className="w-4 h-4" /> },
 ]
 
 export default function Home() {
   return (
     <div className="min-h-screen">
 
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-900 text-white">
-        {/* Background grid pattern */}
+      {/* ══════════════════════════════════════════
+          HERO — Space / Stellar atmosphere
+      ══════════════════════════════════════════ */}
+      <section className="relative overflow-hidden min-h-[92vh] flex flex-col">
+        {/* Deep space background */}
+        <div className="absolute inset-0 bg-[#020818]" />
+
+        {/* Nebula gradients */}
+        <div className="nebula w-[600px] h-[600px] bg-blue-600/8 top-[-10%] left-[-5%]" />
+        <div className="nebula w-[500px] h-[500px] bg-indigo-700/6 top-[20%] right-[-10%]" />
+        <div className="nebula w-[400px] h-[400px] bg-violet-800/5 bottom-[10%] left-[30%]" />
+
+        {/* Stars */}
+        <StarField count={90} />
+
+        {/* Subtle grid overlay */}
         <div
-          className="absolute inset-0 opacity-10"
+          className="absolute inset-0 opacity-[0.03]"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundImage: `linear-gradient(rgba(148,163,184,1) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(148,163,184,1) 1px, transparent 1px)`,
+            backgroundSize: '80px 80px',
           }}
         />
-        {/* Glow blobs */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500 rounded-full blur-3xl opacity-10 -translate-y-1/2" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500 rounded-full blur-3xl opacity-10 translate-y-1/2" />
 
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-28 text-center">
-          {/* Logo mark */}
-          <div className="flex justify-center mb-6">
-            <div className="p-3 bg-white/10 backdrop-blur rounded-2xl border border-white/20 shadow-xl">
-              <Logo size={48} />
+        {/* Hero content */}
+        <div className="relative flex-1 flex flex-col items-center justify-center max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+
+          {/* Logo mark — floats */}
+          <div className="animate-float mb-8 opacity-0 animate-fade-in" style={{ animationFillMode: 'forwards' }}>
+            <div className="inline-flex p-4 rounded-3xl bg-white/[0.05] border border-white/[0.10] shadow-2xl shadow-blue-900/30">
+              <Logo size={52} />
             </div>
           </div>
 
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-1.5 rounded-full text-xs font-semibold mb-6 border border-white/20 text-blue-200 tracking-wide uppercase">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            Live on Stellar Testnet
+          {/* Eyebrow */}
+          <div className="opacity-0 animate-fade-up" style={{ animationFillMode: 'forwards' }}>
+            <span className="badge badge-info mb-5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              STELLAR ACADEMIC CREDENTIALS
+            </span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 tracking-tight">
-            Academic Certificates
+          {/* Heading */}
+          <h1 className="opacity-0 animate-fade-up-d1 text-4xl sm:text-5xl lg:text-[3.75rem] font-extrabold leading-[1.1] tracking-tight mb-6"
+              style={{ animationFillMode: 'forwards' }}>
+            <span className="text-white">Academic Certificate</span>
             <br />
-            <span className="bg-gradient-to-r from-blue-300 to-indigo-300 bg-clip-text text-transparent">
-              On the Blockchain
-            </span>
+            <span className="text-gradient">Verification</span>
           </h1>
 
-          <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Issue tamper-proof academic and professional certificates on Stellar Soroban.
-            Anyone can issue. Anyone can verify. No centralized authority — ever.
+          {/* Sub */}
+          <p className="opacity-0 animate-fade-up-d2 text-base sm:text-lg text-slate-400 max-w-xl mx-auto mb-10 leading-relaxed"
+             style={{ animationFillMode: 'forwards' }}>
+            Verify academic credentials securely and transparently on the Stellar network.
+            Tamper-proof. Permissionless. Permanent.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              to="/issue"
-              className="inline-flex items-center gap-2 px-7 py-3.5 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-900/40 hover:shadow-blue-500/30 hover:-translate-y-0.5"
-            >
-              <Award className="w-5 h-5" />
-              Issue Certificate
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+          {/* CTAs */}
+          <div className="opacity-0 animate-fade-up-d3 flex flex-col sm:flex-row items-center justify-center gap-4"
+               style={{ animationFillMode: 'forwards' }}>
             <Link
               to="/verify"
-              className="inline-flex items-center gap-2 px-7 py-3.5 bg-white/10 backdrop-blur text-white font-bold rounded-xl border border-white/25 hover:bg-white/20 transition-all hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-blue-900/50 hover:shadow-blue-500/30 hover:-translate-y-0.5 text-base"
             >
               <ShieldCheck className="w-5 h-5" />
               Verify Certificate
+              <ArrowRight className="w-4 h-4" />
             </Link>
+            <Link
+              to="/issue"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-white/[0.07] hover:bg-white/[0.12] text-slate-200 font-bold rounded-xl border border-white/[0.12] hover:border-white/20 transition-all duration-200 hover:-translate-y-0.5 text-base"
+            >
+              <Award className="w-5 h-5" />
+              Issue Certificate
+            </Link>
+          </div>
+
+          {/* Scroll hint */}
+          <div className="opacity-0 animate-fade-up-d4 absolute bottom-8 left-1/2 -translate-x-1/2"
+               style={{ animationFillMode: 'forwards' }}>
+            <ChevronDown className="w-5 h-5 text-slate-600 animate-bounce" />
           </div>
         </div>
 
         {/* Stats bar */}
-        <div className="relative border-t border-white/10 bg-white/5 backdrop-blur">
+        <div className="relative border-t border-white/[0.06] bg-white/[0.02] backdrop-blur-sm">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {stats.map((s) => (
-                <div key={s.label} className="flex items-center justify-center gap-2 text-sm text-slate-300 font-medium">
-                  <span className="text-blue-400">{s.icon}</span>
+                <div key={s.label} className="flex items-center justify-center gap-2 text-sm text-slate-500 font-medium">
+                  <span className="text-blue-500">{s.icon}</span>
                   {s.label}
                 </div>
               ))}
@@ -113,102 +169,152 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="text-center mb-12">
-          <span className="text-xs font-bold text-blue-600 uppercase tracking-widest">Why CertChain</span>
-          <h2 className="text-2xl sm:text-3xl font-bold text-slate-800 mt-2">
+      {/* ══════════════════════════════════════════
+          FEATURES
+      ══════════════════════════════════════════ */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <Reveal className="text-center mb-14">
+          <span className="text-xs font-bold text-blue-500 uppercase tracking-[0.2em]">Why CertChain</span>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mt-3">
             A permissionless certificate protocol
           </h2>
-          <p className="text-slate-500 mt-3 max-w-xl mx-auto text-sm">
+          <p className="text-slate-500 mt-3 max-w-xl mx-auto text-sm leading-relaxed">
             Built on Stellar Soroban smart contracts — open, transparent, and unstoppable.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          {features.map((f) => (
-            <div
-              key={f.title}
-              className="group bg-white rounded-2xl border border-slate-100 p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all flex gap-4"
-            >
-              <div className={`w-11 h-11 rounded-xl ${f.bg} flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform`}>
-                {f.icon}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {features.map((f, i) => (
+            <Reveal key={f.title} delay={`reveal-d${(i % 4) + 1}`} dir={i % 2 === 0 ? 'reveal-left' : 'reveal-right'}>
+              <div className={`group card border border-white/[0.07] ${f.border} hover:shadow-xl ${f.glow} transition-all duration-300 hover:-translate-y-1 flex gap-4`}>
+                <div className="w-11 h-11 rounded-xl bg-white/[0.06] border border-white/[0.08] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-200">
+                  {f.icon}
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-100 mb-1.5">{f.title}</h3>
+                  <p className="text-sm text-slate-500 leading-relaxed">{f.desc}</p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-slate-800 mb-1">{f.title}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed">{f.description}</p>
-              </div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="bg-slate-50 border-y border-slate-100">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center mb-10">
-            <span className="text-xs font-bold text-blue-600 uppercase tracking-widest">Simple Flow</span>
-            <h2 className="text-2xl font-bold text-slate-800 mt-2">How it works</h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      {/* ══════════════════════════════════════════
+          VERIFICATION FLOW
+      ══════════════════════════════════════════ */}
+      <section className="border-y border-white/[0.06] bg-white/[0.02]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <Reveal className="text-center mb-14">
+            <span className="text-xs font-bold text-blue-500 uppercase tracking-[0.2em]">How It Works</span>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mt-3">
+              The verification flow
+            </h2>
+            <p className="text-slate-500 mt-3 max-w-lg mx-auto text-sm">
+              Every certificate is cryptographically hashed and stored on Stellar — verifiable by anyone, forever.
+            </p>
+          </Reveal>
+
+          {/* Flow diagram */}
+          <Reveal>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-0">
+              {flowSteps.map((step, i) => (
+                <div key={step.label} className="flex flex-col sm:flex-row items-center">
+                  <div className={`flow-step px-4 py-2 ${step.highlight ? 'scale-105' : ''}`}>
+                    <div className={`flow-icon ${step.highlight ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400 shadow-emerald-500/10' : ''}`}>
+                      {step.icon}
+                    </div>
+                    <p className={`text-sm font-bold mt-2 ${step.highlight ? 'text-emerald-400' : 'text-slate-200'}`}>
+                      {step.label}
+                    </p>
+                    <p className="text-xs text-slate-600 mt-0.5">{step.sub}</p>
+                  </div>
+                  {i < flowSteps.length - 1 && (
+                    <div className="flex sm:flex-row flex-col items-center">
+                      <div className="w-px h-6 sm:w-8 sm:h-px bg-gradient-to-b sm:bg-gradient-to-r from-blue-500/40 to-blue-500/10 my-1 sm:my-0 sm:mx-1" />
+                      <ArrowRight className="w-3.5 h-3.5 text-blue-600/50 rotate-90 sm:rotate-0" />
+                      <div className="w-px h-6 sm:w-8 sm:h-px bg-gradient-to-b sm:bg-gradient-to-r from-blue-500/10 to-blue-500/40 my-1 sm:my-0 sm:mx-1" />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </Reveal>
+
+          {/* Steps */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-14">
             {[
-              { step: '01', title: 'Connect Wallet', desc: 'Connect any Stellar wallet — Freighter, xBull, Albedo, or LOBSTR.' },
-              { step: '02', title: 'Issue or Verify', desc: 'Fill the form to issue a certificate, or enter an ID to verify one instantly.' },
-              { step: '03', title: 'On-chain Forever', desc: 'The certificate is stored permanently on Stellar Testnet, verifiable by anyone.' },
-            ].map((item) => (
-              <div key={item.step} className="relative bg-white rounded-2xl border border-slate-100 p-6 shadow-sm text-center">
-                <div className="text-4xl font-black text-blue-100 mb-3">{item.step}</div>
-                <h3 className="font-bold text-slate-800 mb-2">{item.title}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed">{item.desc}</p>
-              </div>
+              { n: '01', title: 'Connect Wallet',   desc: 'Connect any Stellar wallet — Freighter, xBull, Albedo, or LOBSTR.' },
+              { n: '02', title: 'Issue or Verify',  desc: 'Fill the form to issue a certificate, or enter an ID to verify one instantly.' },
+              { n: '03', title: 'On-chain Forever', desc: 'The certificate is stored permanently on Stellar Testnet, verifiable by anyone.' },
+            ].map((item, i) => (
+              <Reveal key={item.n} delay={`reveal-d${i + 1}`}>
+                <div className="card border border-white/[0.07] hover:border-blue-500/20 transition-all duration-300 text-center hover:-translate-y-1">
+                  <div className="text-5xl font-black text-blue-500/10 mb-3 leading-none">{item.n}</div>
+                  <h3 className="font-bold text-slate-100 mb-2">{item.title}</h3>
+                  <p className="text-sm text-slate-500 leading-relaxed">{item.desc}</p>
+                </div>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-10 text-center text-white shadow-xl shadow-blue-200">
-          <Logo size={40} className="mx-auto mb-4" />
-          <h2 className="text-2xl sm:text-3xl font-extrabold mb-3">Ready to get started?</h2>
-          <p className="text-blue-200 text-sm mb-7 max-w-md mx-auto">
-            Issue your first certificate in under a minute. No sign-up. No approval. Just your wallet.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              to="/issue"
-              className="inline-flex items-center gap-2 px-7 py-3 bg-white text-blue-700 font-bold rounded-xl hover:bg-blue-50 transition-colors shadow-md"
-            >
-              <Award className="w-4 h-4" /> Issue Certificate
-            </Link>
-            <Link
-              to="/verify"
-              className="inline-flex items-center gap-2 px-7 py-3 bg-white/15 text-white font-bold rounded-xl border border-white/30 hover:bg-white/25 transition-colors"
-            >
-              <ShieldCheck className="w-4 h-4" /> Verify Certificate
-            </Link>
+      {/* ══════════════════════════════════════════
+          CTA BANNER
+      ══════════════════════════════════════════ */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <Reveal>
+          <div className="relative overflow-hidden rounded-3xl border border-blue-500/20 bg-gradient-to-br from-blue-900/40 via-indigo-900/30 to-[#020818] p-10 sm:p-14 text-center shadow-2xl shadow-blue-900/20">
+            {/* Subtle nebula inside CTA */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="relative">
+              <Logo size={44} className="mx-auto mb-5" />
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-3">
+                Ready to get started?
+              </h2>
+              <p className="text-slate-400 text-sm mb-8 max-w-md mx-auto leading-relaxed">
+                Issue your first certificate in under a minute. No sign-up. No approval. Just your wallet.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link to="/issue" className="btn-primary px-7 py-3 text-base">
+                  <Award className="w-5 h-5" /> Issue Certificate
+                </Link>
+                <Link to="/verify" className="btn-secondary px-7 py-3 text-base">
+                  <ShieldCheck className="w-5 h-5" /> Verify Certificate
+                </Link>
+              </div>
+            </div>
           </div>
-        </div>
+        </Reveal>
       </section>
 
-      {/* Contract info */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-center">
-          <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2">
-            Deployed Smart Contract
-          </p>
-          <p className="font-mono text-sm text-slate-700 break-all">
-            {import.meta.env.VITE_CONTRACT_ID}
-          </p>
-          <a
-            href={`https://stellar.expert/explorer/testnet/contract/${import.meta.env.VITE_CONTRACT_ID}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 mt-2 font-medium"
-          >
-            View on Stellar Expert ↗
-          </a>
-        </div>
+      {/* ══════════════════════════════════════════
+          CONTRACT INFO
+      ══════════════════════════════════════════ */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        <Reveal>
+          <div className="card border border-white/[0.07] text-center">
+            <p className="text-xs font-semibold text-slate-600 uppercase tracking-[0.2em] mb-3">
+              Deployed Smart Contract
+            </p>
+            <p className="mono-chip inline-block text-slate-400 text-xs sm:text-sm">
+              {import.meta.env.VITE_CONTRACT_ID}
+            </p>
+            <div className="mt-3">
+              <a
+                href={`https://stellar.expert/explorer/testnet/contract/${import.meta.env.VITE_CONTRACT_ID}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs text-blue-500 hover:text-blue-400 transition-colors font-medium"
+              >
+                View on Stellar Expert ↗
+              </a>
+            </div>
+          </div>
+        </Reveal>
       </section>
     </div>
   )
