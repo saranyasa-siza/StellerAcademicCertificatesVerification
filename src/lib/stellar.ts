@@ -57,28 +57,41 @@ export async function sendXLM(
 ): Promise<string> {
   const account = await horizon.loadAccount(senderAddress)
 
+  // Check if destination account exists; use createAccount if not
+  let destinationExists = true
+  try {
+    await horizon.loadAccount(destination)
+  } catch {
+    destinationExists = false
+  }
+
+  const operation = destinationExists
+    ? Operation.payment({ destination, asset: Asset.native(), amount })
+    : Operation.createAccount({ destination, startingBalance: amount })
+
   const txBuilder = new TransactionBuilder(account, {
-    fee: BASE_FEE,
+    fee: '10000',
     networkPassphrase: NETWORK_PASSPHRASE,
-  }).addOperation(
-    Operation.payment({
-      destination,
-      asset: Asset.native(),
-      amount,
-    })
-  )
+  }).addOperation(operation)
 
   if (memo) txBuilder.addMemo(Memo.text(memo))
 
-  const tx = txBuilder.setTimeout(30).build()
+  const tx = txBuilder.setTimeout(180).build()
 
-  // Sign with Freighter
-  const signedXdr = await signWithKit(tx.toXDR(), NETWORK_PASSPHRASE)
+  // Sign with wallet
+  const signedXdr = await signWithKit(tx.toXDR(), NETWORK_PASSPHRASE, senderAddress)
 
   // Submit to Horizon
   const signedTx = TransactionBuilder.fromXDR(signedXdr, NETWORK_PASSPHRASE)
-  const result = await horizon.submitTransaction(signedTx)
-  return result.hash
+  try {
+    const result = await horizon.submitTransaction(signedTx as Parameters<typeof horizon.submitTransaction>[0])
+    return result.hash
+  } catch (err: unknown) {
+    const e = err as { response?: { data?: { extras?: { result_codes?: unknown } } }; message?: string }
+    const codes = e?.response?.data?.extras?.result_codes
+    if (codes) throw new Error(JSON.stringify(codes))
+    throw new Error(e?.message ?? 'Transaction failed')
+  }
 }
 
 // ── helpers ───────────────────────────────────────────────────────────────────
@@ -162,7 +175,7 @@ export async function sendContractTransaction(
   if (rpc.Api.isSimulationError(simResult)) throw new Error(simResult.error)
 
   const preparedTx = rpc.assembleTransaction(tx, simResult).build()
-  const signedXdr = await signWithKit(preparedTx.toXDR(), NETWORK_PASSPHRASE)
+  const signedXdr = await signWithKit(preparedTx.toXDR(), NETWORK_PASSPHRASE, signerAddress)
 
   const signedTx = TransactionBuilder.fromXDR(signedXdr, NETWORK_PASSPHRASE)
   const sendResult = await server.sendTransaction(signedTx)

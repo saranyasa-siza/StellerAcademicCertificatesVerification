@@ -34,8 +34,8 @@ export async function connectWithModal(): Promise<string> {
 }
 
 /** Sign a transaction XDR using the currently selected wallet module */
-export async function signWithKit(xdr: string, networkPassphrase: string): Promise<string> {
-  const { signedTxXdr } = await StellarWalletsKit.signTransaction(xdr, { networkPassphrase })
+export async function signWithKit(xdr: string, networkPassphrase: string, address?: string): Promise<string> {
+  const { signedTxXdr } = await StellarWalletsKit.signTransaction(xdr, { networkPassphrase, address })
   return signedTxXdr
 }
 
