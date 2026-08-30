@@ -320,8 +320,10 @@ VITE_NETWORK=testnet
 https://drive.google.com/file/d/1C-a3aEQ4QCATM9sjyQY3Y44_ZHWgIe6T/view?usp=sharing
 
 ## Screenshots (Mobile Responsive UI)
-<img width="487" height="771" alt="Screenshot 2026-08-10 215402" src="https://github.com/user-attachments/assets/f99dd0e8-f904-495f-8792-f1acd969a148" />
-<img width="482" height="805" alt="Screenshot 2026-08-10 215453" src="https://github.com/user-attachments/assets/105402a3-940b-4cff-9bf2-ba863e6c56da" />
+<img width="497" height="770" alt="Screenshot 2026-08-30 133139" src="https://github.com/user-attachments/assets/ce4b92e2-d9bf-47df-be39-704701fb73d3" />
+<img width="496" height="767" alt="Screenshot 2026-08-30 133251" src="https://github.com/user-attachments/assets/430f3ee6-5427-4570-9f22-34898816d6a1" />
+
+
 
 ## CI/CD Pipeline
 <img width="1893" height="525" alt="Screenshot 2026-08-10 215108" src="https://github.com/user-attachments/assets/aeaf7119-4124-46ac-a19b-222a8602fc09" />
