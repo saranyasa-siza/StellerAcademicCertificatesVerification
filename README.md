@@ -1,6 +1,7 @@
 # CertChain — Academic Certificate Verification on Stellar
 
-<img width="1919" height="898" alt="Screenshot 2026-08-02 142113" src="https://github.com/user-attachments/assets/8b31c1bf-3c26-4681-b0d8-73c463e4bb49" />
+<img width="1889" height="900" alt="Screenshot 2026-08-30 133106" src="https://github.com/user-attachments/assets/b5475d46-88ac-40c4-a04a-9c9c12b12278" />
+
 
 <img width="1919" height="908" alt="Screenshot 2026-08-02 143239" src="https://github.com/user-attachments/assets/697e706a-e73b-4200-8fac-08393ae8cfc8" />
 
