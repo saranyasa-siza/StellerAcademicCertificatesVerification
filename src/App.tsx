@@ -30,6 +30,9 @@ export default function App() {
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
     >
+      {/* ── FIXED TOP NAVBAR (STICKS TO TOP ACROSS ALL SCROLL POSITIONS) ── */}
+      <Navbar />
+
       {/* ── SHIMMER GRID — follows cursor, sits above bg, below content ── */}
       <div
         ref={shimmerRef}
@@ -63,8 +66,7 @@ export default function App() {
       <StarfieldOverlay particleCount={420} interactionRadius={150} />
 
       {/* ── All real content sits above the background & particle overlay ── */}
-      <div className="relative z-10 flex flex-col min-h-screen">
-        <Navbar />
+      <div className="relative z-10 flex flex-col min-h-screen pt-16">
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<Home />} />

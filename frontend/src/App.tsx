@@ -10,6 +10,9 @@ import StarfieldOverlay from './components/StarfieldOverlay'
 export default function App() {
   return (
     <div className="min-h-screen flex flex-col relative bg-[#020818] selection:bg-blue-600 selection:text-white">
+      {/* ── FIXED TOP NAVBAR (STICKS TO TOP ACROSS ALL SCROLL POSITIONS) ── */}
+      <Navbar />
+
       {/* ── COSMIC BACKGROUND — preserves exact theme ── */}
       <div
         aria-hidden="true"
@@ -25,8 +28,7 @@ export default function App() {
       <StarfieldOverlay particleCount={420} interactionRadius={150} />
 
       {/* ── All real content sits above the background & particle overlay ── */}
-      <div className="relative z-10 flex flex-col flex-1 min-h-screen">
-        <Navbar />
+      <div className="relative z-10 flex flex-col flex-1 min-h-screen pt-16">
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<Home />} />

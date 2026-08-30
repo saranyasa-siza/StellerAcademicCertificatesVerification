@@ -1,86 +1,101 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import { ShieldCheck, Menu, X, Send } from 'lucide-react'
+import { Menu, X, Send, Award, ShieldCheck, LayoutDashboard, Home } from 'lucide-react'
 import { useWallet } from '../hooks/useWallet'
 import { shortAddress } from '../utils/helpers'
+import Logo from './Logo'
+import Spinner from './Spinner'
+
+const navLinks = [
+  { to: '/',                label: 'Home',      icon: <Home className="w-3.5 h-3.5" /> },
+  { to: '/issue',           label: 'Issue',     icon: <Award className="w-3.5 h-3.5" /> },
+  { to: '/verify',          label: 'Verify',    icon: <ShieldCheck className="w-3.5 h-3.5" /> },
+  { to: '/my-certificates', label: 'My Certs',  icon: <LayoutDashboard className="w-3.5 h-3.5" /> },
+  { to: '/send',            label: 'Send XLM',  icon: <Send className="w-3.5 h-3.5" /> },
+]
 
 export default function Navbar() {
   const { publicKey, connected, connecting, connect, disconnect, balance } = useWallet()
   const [menuOpen, setMenuOpen] = useState(false)
 
-  const navLinks = [
-    { to: '/', label: 'Home' },
-    { to: '/issue', label: 'Issue Certificate' },
-    { to: '/verify', label: 'Verify' },
-    { to: '/my-certificates', label: 'My Certificates' },
-    { to: '/send', label: 'Send XLM' },
-  ]
-
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/60 shadow-sm">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#020818]/90 backdrop-blur-xl border-b border-white/[0.08]">
+      {/* Top accent line */}
+      <div className="h-px bg-gradient-to-r from-transparent via-blue-500/60 to-transparent" />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between py-3">
+
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 font-bold text-xl text-brand-700">
-            <ShieldCheck className="w-7 h-7 text-brand-600" />
-            CertChain
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <Logo size={32} />
+            <div className="flex flex-col leading-none">
+              <span className="font-extrabold text-base text-white tracking-tight group-hover:text-blue-300 transition-colors duration-200">
+                CertChain
+              </span>
+              <span className="text-[9px] font-semibold text-slate-500 tracking-[0.2em] uppercase">
+                Stellar · Testnet
+              </span>
+            </div>
           </Link>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-0.5">
             {navLinks.map((link) => (
               <NavLink
                 key={link.to}
                 to={link.to}
                 end={link.to === '/'}
                 className={({ isActive }) =>
-                  `px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  `flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                     isActive
-                      ? 'bg-brand-50 text-brand-700'
-                      : 'text-slate-600 hover:text-brand-600 hover:bg-slate-50'
+                      ? 'bg-blue-500/15 text-blue-300 border border-blue-500/20'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.06]'
                   }`
                 }
               >
-                {link.to === '/send' ? (
-                  <span className="flex items-center gap-1">
-                    <Send className="w-3.5 h-3.5" /> {link.label}
-                  </span>
-                ) : link.label}
+                {link.icon}
+                {link.label}
               </NavLink>
             ))}
           </div>
 
-          {/* Wallet button */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* Wallet */}
+          <div className="hidden md:flex items-center gap-2">
             {connected ? (
               <div className="flex items-center gap-2">
                 {balance !== null && (
-                  <span className="text-sm font-semibold text-brand-700 bg-brand-50 px-3 py-1.5 rounded-lg">
+                  <span className="text-sm font-bold text-blue-300 bg-blue-500/10 border border-blue-500/20 px-3 py-1.5 rounded-lg">
                     {parseFloat(balance).toFixed(2)} XLM
                   </span>
                 )}
-                <span className="flex items-center gap-1.5 text-sm text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg">
-                  <span className="w-2 h-2 rounded-full bg-green-500 inline-block" />
-                  {shortAddress(publicKey!)}
-                </span>
+                <div className="flex items-center gap-1.5 text-sm text-slate-300 bg-white/[0.06] border border-white/[0.10] px-3 py-1.5 rounded-lg">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50" />
+                  <span className="font-mono text-xs">{shortAddress(publicKey!)}</span>
+                </div>
                 <button
                   onClick={disconnect}
-                  className="text-sm text-slate-500 hover:text-red-500 transition-colors px-2 py-1"
+                  className="text-xs text-slate-500 hover:text-red-400 transition-colors px-2 py-1.5 rounded-lg hover:bg-red-500/10"
                 >
                   Disconnect
                 </button>
               </div>
             ) : (
-              <button onClick={connect} disabled={connecting} className="btn-primary text-sm">
-                {connecting ? 'Connecting…' : 'Connect Wallet'}
+              <button
+                onClick={connect}
+                disabled={connecting}
+                className="btn-primary text-sm py-2 px-4"
+              >
+                {connecting ? <><Spinner size="sm" /> Connecting…</> : 'Connect Wallet'}
               </button>
             )}
           </div>
 
           {/* Mobile toggle */}
           <button
-            className="md:hidden p-2 rounded-lg text-slate-500 hover:bg-slate-100"
+            className="md:hidden p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] transition-colors"
             onClick={() => setMenuOpen((o) => !o)}
+            aria-label="Toggle menu"
           >
             {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -89,7 +104,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden border-t border-slate-100 bg-white/95 backdrop-blur-md px-4 py-3 space-y-1">
+        <div className="md:hidden border-t border-white/[0.07] bg-[#020818]/95 backdrop-blur-xl px-4 py-3 space-y-1">
           {navLinks.map((link) => (
             <NavLink
               key={link.to}
@@ -97,32 +112,33 @@ export default function Navbar() {
               end={link.to === '/'}
               onClick={() => setMenuOpen(false)}
               className={({ isActive }) =>
-                `block px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                `flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                   isActive
-                    ? 'bg-brand-50 text-brand-700'
-                    : 'text-slate-600 hover:text-brand-600 hover:bg-slate-50'
+                    ? 'bg-blue-500/15 text-blue-300 border border-blue-500/20'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.06]'
                 }`
               }
             >
+              {link.icon}
               {link.label}
             </NavLink>
           ))}
-          <div className="pt-2">
+          <div className="pt-2 border-t border-white/[0.07]">
             {connected ? (
               <div className="space-y-2">
                 {balance !== null && (
-                  <div className="px-4 py-2 bg-brand-50 rounded-lg text-sm font-semibold text-brand-700">
+                  <div className="px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-xl text-sm font-bold text-blue-300">
                     Balance: {parseFloat(balance).toFixed(2)} XLM
                   </div>
                 )}
-                <div className="flex items-center justify-between px-4 py-2 bg-slate-50 rounded-lg">
-                  <span className="flex items-center gap-1.5 text-sm text-slate-600">
-                    <span className="w-2 h-2 rounded-full bg-green-500 inline-block" />
+                <div className="flex items-center justify-between px-4 py-2 bg-white/[0.05] border border-white/[0.08] rounded-xl">
+                  <span className="flex items-center gap-1.5 text-sm text-slate-300 font-mono">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                     {shortAddress(publicKey!)}
                   </span>
                   <button
                     onClick={() => { disconnect(); setMenuOpen(false) }}
-                    className="text-sm text-red-500"
+                    className="text-xs text-red-400 font-medium"
                   >
                     Disconnect
                   </button>
@@ -132,9 +148,9 @@ export default function Navbar() {
               <button
                 onClick={() => { connect(); setMenuOpen(false) }}
                 disabled={connecting}
-                className="btn-primary w-full justify-center text-sm"
+                className="btn-primary w-full justify-center"
               >
-                {connecting ? 'Connecting…' : 'Connect Wallet'}
+                {connecting ? <><Spinner size="sm" /> Connecting…</> : 'Connect Wallet'}
               </button>
             )}
           </div>

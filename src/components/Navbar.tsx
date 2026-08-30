@@ -19,7 +19,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <nav className="sticky top-0 z-50 bg-[#020818]/80 backdrop-blur-xl border-b border-white/[0.07]">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#020818]/90 backdrop-blur-xl border-b border-white/[0.08]">
       {/* Top accent line */}
       <div className="h-px bg-gradient-to-r from-transparent via-blue-500/60 to-transparent" />
 
