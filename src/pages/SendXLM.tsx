@@ -68,24 +68,23 @@ export default function SendXLM() {
 
   return (
     <div className="max-w-lg mx-auto px-4 sm:px-6 py-12">
-
       {/* Page header */}
       <div className="flex items-center gap-3 mb-8">
-        <div className="w-11 h-11 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-md shadow-indigo-200">
-          <Send className="w-5 h-5 text-white" />
+        <div className="w-11 h-11 rounded-2xl bg-cyan-600/20 border border-cyan-500/30 flex items-center justify-center shadow-lg shadow-cyan-900/20">
+          <Send className="w-5 h-5 text-cyan-400" />
         </div>
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-800">Send XLM</h1>
-          <p className="text-sm text-slate-500">Transfer XLM on Stellar Testnet</p>
+          <h1 className="text-2xl font-extrabold text-white">Send XLM</h1>
+          <p className="text-sm text-slate-400">Transfer XLM on Stellar Testnet</p>
         </div>
       </div>
 
       {!connected ? (
-        <div className="card text-center py-14 border-dashed">
-          <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
+        <div className="card border border-dashed border-white/[0.10] text-center py-14">
+          <div className="w-14 h-14 rounded-2xl bg-white/[0.05] border border-white/[0.08] flex items-center justify-center mx-auto mb-4">
             <AlertCircle className="w-7 h-7 text-slate-400" />
           </div>
-          <p className="text-slate-700 font-semibold mb-1">Wallet not connected</p>
+          <p className="text-slate-200 font-semibold mb-1">Wallet not connected</p>
           <p className="text-sm text-slate-400 mb-6">Connect your Stellar wallet to send XLM</p>
           <button onClick={connect} disabled={connecting} className="btn-primary mx-auto">
             {connecting ? <><Spinner size="sm" /> Connecting…</> : 'Connect Wallet'}
@@ -93,42 +92,41 @@ export default function SendXLM() {
         </div>
       ) : (
         <div className="space-y-4">
-
           {/* Balance card */}
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-blue-600 to-blue-700 text-white p-6 shadow-lg shadow-blue-200">
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-900/80 via-blue-900/60 to-[#0a1a3a] border border-blue-500/30 text-white p-6 shadow-xl">
             {/* Background decoration */}
-            <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
+            <div className="absolute top-0 right-0 w-40 h-40 bg-blue-500/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-cyan-500/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-xl pointer-events-none" />
 
             <div className="relative">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <Wallet className="w-4 h-4 text-blue-200" />
-                  <span className="text-sm font-medium text-blue-200">Your Balance</span>
+                  <Wallet className="w-4 h-4 text-blue-300" />
+                  <span className="text-sm font-medium text-slate-300">Your Balance</span>
                 </div>
                 <button
                   onClick={handleRefresh}
                   disabled={refreshing}
-                  className="p-1.5 text-blue-200 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                  className="p-1.5 text-blue-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
                   title="Refresh balance"
                 >
                   <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
                 </button>
               </div>
 
-              <p className="text-4xl font-black tracking-tight mb-1">
+              <p className="text-4xl font-black tracking-tight mb-1 text-white">
                 {balance !== null ? (
-                  <>{parseFloat(balance).toFixed(4)} <span className="text-2xl font-bold text-blue-200">XLM</span></>
+                  <>{parseFloat(balance).toFixed(4)} <span className="text-2xl font-bold text-blue-400">XLM</span></>
                 ) : '—'}
               </p>
-              <p className="font-mono text-xs text-blue-300 mt-3">{shortAddress(publicKey!)}</p>
+              <p className="font-mono text-xs text-slate-400 mt-3">{shortAddress(publicKey!)}</p>
 
               {/* Friendbot link */}
               <a
                 href={`https://friendbot.stellar.org?addr=${publicKey}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs text-blue-200 hover:text-white mt-3 transition-colors"
+                className="inline-flex items-center gap-1.5 text-xs text-blue-300 hover:text-white mt-3 transition-colors"
               >
                 <ExternalLink className="w-3 h-3" />
                 Fund via Friendbot (Testnet)
@@ -137,7 +135,7 @@ export default function SendXLM() {
           </div>
 
           {/* Send form */}
-          <div className="card space-y-4">
+          <div className="card border border-white/[0.07] space-y-4">
             {txStatus && <TxStatus hash={txHash ?? undefined} status={txStatus} error={txError ?? undefined} />}
 
             <form onSubmit={handleSend} className="space-y-4">

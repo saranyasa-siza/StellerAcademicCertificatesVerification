@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Search, ShieldCheck } from 'lucide-react'
+import { Search, ShieldCheck, Info } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { getCertificate, certificateExists, type Certificate } from '../lib/stellar'
 import CertificateCard from '../components/CertificateCard'
@@ -44,52 +44,84 @@ export default function VerifyCertificate() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-12">
-      <div className="flex items-center gap-3 mb-8">
-        <div className="w-10 h-10 rounded-xl bg-brand-100 flex items-center justify-center">
-          <ShieldCheck className="w-5 h-5 text-brand-600" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800">Verify Certificate</h1>
-          <p className="text-sm text-slate-500">
-            Enter a Certificate ID to verify its authenticity on-chain
-          </p>
+      {/* Page header */}
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-11 h-11 rounded-2xl bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center shadow-lg shadow-emerald-900/20">
+            <ShieldCheck className="w-5 h-5 text-emerald-400" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-extrabold text-white">Verify Certificate</h1>
+            <p className="text-sm text-slate-400">Check the authenticity of any certificate on-chain</p>
+          </div>
         </div>
       </div>
 
-      {/* Search form */}
-      <form onSubmit={handleSearch} className="card mb-6">
-        <label className="label">Certificate ID</label>
-        <div className="flex gap-3">
-          <input
-            className="input flex-1"
-            placeholder="e.g. CERT-MIT-2024-001"
-            value={certId}
-            onChange={(e) => setCertId(e.target.value)}
-            required
-          />
-          <button type="submit" disabled={loading || !certId.trim()} className="btn-primary shrink-0">
-            {loading ? <Spinner size="sm" /> : <Search className="w-4 h-4" />}
-            {loading ? 'Searching…' : 'Verify'}
-          </button>
-        </div>
-      </form>
+      {/* Search card */}
+      <div className="card border border-white/[0.07] mb-6">
+        <form onSubmit={handleSearch} className="space-y-4">
+          <div>
+            <label className="label">Certificate ID</label>
+            <div className="flex gap-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                <input
+                  className="input pl-9"
+                  placeholder="e.g. CERT-MIT-2024-001"
+                  value={certId}
+                  onChange={(e) => {
+                    setCertId(e.target.value)
+                    if (searched) { setCert(null); setNotFound(false); setSearched(false) }
+                  }}
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={loading || !certId.trim()}
+                className="btn-primary shrink-0"
+              >
+                {loading ? <Spinner size="sm" /> : <Search className="w-4 h-4" />}
+                {loading ? 'Searching…' : 'Verify'}
+              </button>
+            </div>
+          </div>
 
-      {/* Result */}
+          {/* Hint */}
+          <div className="flex items-start gap-2 text-xs text-slate-400 bg-white/[0.04] border border-white/[0.06] rounded-xl px-3.5 py-2.5">
+            <Info className="w-3.5 h-3.5 mt-0.5 shrink-0 text-slate-400" />
+            Enter the exact Certificate ID as issued. Verification reads directly from the Stellar blockchain — no login required.
+          </div>
+        </form>
+      </div>
+
+      {/* Loading */}
       {loading && (
-        <div className="flex justify-center py-12">
+        <div className="flex flex-col items-center justify-center py-16 gap-3">
           <Spinner size="lg" />
+          <p className="text-sm text-slate-400">Querying Stellar blockchain…</p>
         </div>
       )}
 
+      {/* Not found */}
       {!loading && searched && notFound && (
         <EmptyState
           icon={<Search className="w-8 h-8" />}
           title="Certificate not found"
-          description={`No certificate with ID "${certId.trim()}" exists on-chain.`}
+          description={`No certificate with ID "${certId.trim()}" exists on-chain. Double-check the ID and try again.`}
         />
       )}
 
-      {!loading && cert && <CertificateCard cert={cert} />}
+      {/* Result */}
+      {!loading && cert && (
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 text-sm font-semibold text-emerald-400 bg-emerald-500/15 border border-emerald-500/20 rounded-xl px-4 py-2.5">
+            <ShieldCheck className="w-4 h-4" />
+            Certificate found and verified on-chain
+          </div>
+          <CertificateCard cert={cert} />
+        </div>
+      )}
     </div>
   )
 }

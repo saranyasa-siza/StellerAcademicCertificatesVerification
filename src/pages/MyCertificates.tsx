@@ -54,16 +54,15 @@ export default function MyCertificates() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
-
       {/* Page header */}
       <div className="flex items-start justify-between mb-8 gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-violet-600 flex items-center justify-center shadow-md shadow-violet-200">
-            <LayoutDashboard className="w-5 h-5 text-white" />
+          <div className="w-11 h-11 rounded-2xl bg-violet-600/20 border border-violet-500/30 flex items-center justify-center shadow-lg shadow-violet-900/20">
+            <LayoutDashboard className="w-5 h-5 text-violet-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-extrabold text-slate-800">My Certificates</h1>
-            <p className="text-sm text-slate-500">Certificates issued from your wallet</p>
+            <h1 className="text-2xl font-extrabold text-white">My Certificates</h1>
+            <p className="text-sm text-slate-400">Certificates issued from your wallet</p>
           </div>
         </div>
         {connected && !loading && certs.length > 0 && (
@@ -78,13 +77,13 @@ export default function MyCertificates() {
       {connected && !loading && certs.length > 0 && (
         <div className="grid grid-cols-3 gap-3 mb-6">
           {[
-            { label: 'Total', value: certs.length, color: 'text-slate-700', bg: 'bg-slate-50 border-slate-200' },
-            { label: 'Active', value: active, color: 'text-emerald-700', bg: 'bg-emerald-50 border-emerald-200' },
-            { label: 'Revoked', value: revoked, color: 'text-red-600', bg: 'bg-red-50 border-red-200' },
+            { label: 'Total', value: certs.length, color: 'text-white', bg: 'bg-white/[0.04] border-white/[0.08]' },
+            { label: 'Active', value: active, color: 'text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/20' },
+            { label: 'Revoked', value: revoked, color: 'text-red-400', bg: 'bg-red-500/10 border-red-500/20' },
           ].map((s) => (
             <div key={s.label} className={`rounded-2xl border px-4 py-3 text-center ${s.bg}`}>
               <p className={`text-2xl font-extrabold ${s.color}`}>{s.value}</p>
-              <p className="text-xs font-medium text-slate-500 mt-0.5">{s.label}</p>
+              <p className="text-xs font-medium text-slate-400 mt-0.5">{s.label}</p>
             </div>
           ))}
         </div>
@@ -92,11 +91,11 @@ export default function MyCertificates() {
 
       {/* States */}
       {!connected ? (
-        <div className="card text-center py-14 border-dashed">
-          <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
+        <div className="card border border-dashed border-white/[0.10] text-center py-14">
+          <div className="w-14 h-14 rounded-2xl bg-white/[0.05] border border-white/[0.08] flex items-center justify-center mx-auto mb-4">
             <AlertCircle className="w-7 h-7 text-slate-400" />
           </div>
-          <p className="text-slate-700 font-semibold mb-1">Wallet not connected</p>
+          <p className="text-slate-200 font-semibold mb-1">Wallet not connected</p>
           <p className="text-sm text-slate-400 mb-6">Connect your wallet to view your issued certificates</p>
           <button onClick={connect} disabled={connecting} className="btn-primary mx-auto">
             {connecting ? <><Spinner size="sm" /> Connecting…</> : 'Connect Wallet'}
@@ -105,7 +104,7 @@ export default function MyCertificates() {
       ) : loading ? (
         <div className="flex flex-col items-center justify-center py-20 gap-3">
           <Spinner size="lg" />
-          <p className="text-sm text-slate-500">Loading your certificates…</p>
+          <p className="text-sm text-slate-400">Loading your certificates…</p>
         </div>
       ) : certs.length === 0 ? (
         <EmptyState

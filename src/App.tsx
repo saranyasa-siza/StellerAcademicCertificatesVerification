@@ -26,7 +26,7 @@ export default function App() {
 
   return (
     <div
-      className="min-h-screen flex flex-col bg-[#020818] relative overflow-x-hidden max-w-full"
+      className="min-h-screen flex flex-col bg-[#020818] relative"
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
     >
@@ -60,12 +60,12 @@ export default function App() {
       </div>
 
       {/* ── FULL-PAGE INTERACTIVE PARTICLE STARFIELD OVERLAY (SCROLLS WITH PAGE + DEPTH ZOOM) ── */}
-      <StarfieldOverlay particleCount={280} interactionRadius={140} />
+      <StarfieldOverlay particleCount={420} interactionRadius={150} />
 
       {/* ── All real content sits above the background & particle overlay ── */}
-      <div className="relative z-10 flex flex-col min-h-screen max-w-full overflow-x-hidden">
+      <div className="relative z-10 flex flex-col min-h-screen">
         <Navbar />
-        <main className="flex-1 max-w-full overflow-x-hidden">
+        <main className="flex-1">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/issue" element={<IssueCertificate />} />
@@ -74,7 +74,7 @@ export default function App() {
             <Route path="/send" element={<SendXLM />} />
           </Routes>
         </main>
-        <footer className="border-t border-white/[0.06] bg-[#020818]/80 backdrop-blur-sm max-w-full">
+        <footer className="border-t border-white/[0.06] bg-[#020818]/80 backdrop-blur-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-sm text-slate-500">
               <span className="font-bold text-slate-400">CertChain</span>

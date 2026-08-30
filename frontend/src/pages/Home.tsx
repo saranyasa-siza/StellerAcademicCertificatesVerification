@@ -1,110 +1,186 @@
 import { Link } from 'react-router-dom'
-import { ShieldCheck, Search, Award, Users } from 'lucide-react'
-
-const features = [
-  {
-    icon: <Award className="w-6 h-6 text-brand-600" />,
-    title: 'Issue Certificates',
-    description:
-      'Any wallet can issue tamper-proof academic or professional certificates directly on-chain. No approval needed.',
-  },
-  {
-    icon: <ShieldCheck className="w-6 h-6 text-brand-600" />,
-    title: 'Verify Instantly',
-    description:
-      'Anyone can verify the authenticity of a certificate in seconds using just the Certificate ID.',
-  },
-  {
-    icon: <Search className="w-6 h-6 text-brand-600" />,
-    title: 'Search & Explore',
-    description:
-      'Look up any certificate by ID. All data is permanently stored on the Stellar blockchain.',
-  },
-  {
-    icon: <Users className="w-6 h-6 text-brand-600" />,
-    title: 'No Central Authority',
-    description:
-      'No admin. No owner. Your wallet is your identity. The protocol is open to everyone.',
-  },
-]
+import {
+  ShieldCheck,
+  Award,
+  Search,
+  LayoutDashboard,
+  Send,
+  ArrowRight,
+  Hash,
+  ExternalLink,
+  CheckCircle2,
+  Lock,
+} from 'lucide-react'
 
 export default function Home() {
+  const quickActions = [
+    {
+      to: '/verify',
+      icon: <Search className="w-5 h-5 text-emerald-400" />,
+      title: 'Verify Certificate',
+      desc: 'Verify authenticity and cryptographic proof of any certificate on-chain.',
+      badge: 'Public lookup',
+      badgeClass: 'badge-success',
+      btnText: 'Verify Now',
+      btnClass: 'btn-primary',
+    },
+    {
+      to: '/issue',
+      icon: <Award className="w-5 h-5 text-blue-400" />,
+      title: 'Issue Certificate',
+      desc: 'Issue tamper-proof academic and professional certificates directly on-chain.',
+      badge: 'Permissionless',
+      badgeClass: 'badge-info',
+      btnText: 'Issue Certificate',
+      btnClass: 'btn-secondary',
+    },
+    {
+      to: '/my-certificates',
+      icon: <LayoutDashboard className="w-5 h-5 text-violet-400" />,
+      title: 'My Certificates',
+      desc: 'View, filter, manage, and inspect all certificates issued by your wallet.',
+      badge: 'Wallet view',
+      badgeClass: 'badge-warning',
+      btnText: 'View Dashboard',
+      btnClass: 'btn-secondary',
+    },
+    {
+      to: '/send',
+      icon: <Send className="w-5 h-5 text-cyan-400" />,
+      title: 'Send XLM',
+      desc: 'Send native Stellar Lumens (XLM) to any testnet account with optional memo.',
+      badge: 'Payments',
+      badgeClass: 'badge-info',
+      btnText: 'Send XLM',
+      btnClass: 'btn-secondary',
+    },
+  ]
+
   return (
-    <div>
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-brand-700/90 via-brand-600/85 to-brand-500/90 backdrop-blur-sm text-white relative overflow-hidden border-b border-brand-500/20">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-1.5 rounded-full text-sm font-medium mb-6">
-            <ShieldCheck className="w-4 h-4" />
-            Powered by Stellar Soroban · Testnet
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12 space-y-8">
+      {/* ── Page Header matching other pages ── */}
+      <div>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-11 h-11 rounded-2xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center shadow-lg shadow-blue-900/20">
+            <ShieldCheck className="w-6 h-6 text-blue-400" />
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
-            Academic Certificate
-            <br />
-            Verification on Stellar
-          </h1>
-          <p className="text-lg sm:text-xl text-brand-100 max-w-2xl mx-auto mb-10">
-            Issue tamper-proof academic and professional certificates on the Stellar blockchain.
-            Anyone can issue. Anyone can verify. No centralized authority.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              to="/issue"
-              className="inline-flex items-center gap-2 px-8 py-3.5 bg-white text-brand-700 font-bold rounded-xl hover:bg-brand-50 transition-colors shadow-lg"
-            >
-              <Award className="w-5 h-5" />
-              Issue Certificate
-            </Link>
-            <Link
-              to="/verify"
-              className="inline-flex items-center gap-2 px-8 py-3.5 bg-white/10 backdrop-blur text-white font-bold rounded-xl border border-white/30 hover:bg-white/20 transition-colors"
-            >
-              <ShieldCheck className="w-5 h-5" />
-              Verify Certificate
-            </Link>
+          <div>
+            <div className="flex items-center gap-2.5">
+              <h1 className="text-2xl font-extrabold text-white">CertChain</h1>
+              <span className="badge badge-info">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Soroban Testnet
+              </span>
+            </div>
+            <p className="text-sm text-slate-400">
+              Academic Certificate Verification Protocol on Stellar
+            </p>
           </div>
         </div>
-      </section>
 
-      {/* Features */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <h2 className="text-2xl font-bold text-center text-slate-800 mb-12">
-          A permissionless certificate protocol
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {features.map((f) => (
-            <div key={f.title} className="card flex gap-4">
-              <div className="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center shrink-0">
-                {f.icon}
+        <div className="flex flex-wrap gap-2">
+          <span className="badge badge-info flex items-center gap-1">
+            <Lock className="w-3 h-3" /> Tamper-proof
+          </span>
+          <span className="badge badge-success flex items-center gap-1">
+            <CheckCircle2 className="w-3 h-3" /> Instant Verification
+          </span>
+          <span className="badge bg-white/[0.06] text-slate-300 border border-white/[0.10]">
+            SHA-256 On-Chain
+          </span>
+        </div>
+      </div>
+
+      {/* ── Main Hero Card ── */}
+      <div className="card border border-white/[0.07] space-y-4">
+        <div className="flex items-center gap-2 pb-3 border-b border-white/[0.07]">
+          <span className="text-blue-400">
+            <ShieldCheck className="w-4 h-4" />
+          </span>
+          <span className="text-sm font-bold text-slate-200">Protocol Overview</span>
+        </div>
+
+        <p className="text-sm text-slate-300 leading-relaxed">
+          CertChain is a permissionless decentralized protocol for issuing, managing, and verifying
+          academic credentials on the Stellar network using Soroban smart contracts. No central authority,
+          no private servers — all cryptographic hashes are stored permanently on-chain.
+        </p>
+
+        <div className="flex flex-wrap gap-3 pt-2">
+          <Link to="/verify" className="btn-primary">
+            <Search className="w-4 h-4" />
+            Verify a Certificate
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+          <Link to="/issue" className="btn-secondary">
+            <Award className="w-4 h-4" />
+            Issue a Certificate
+          </Link>
+        </div>
+      </div>
+
+      {/* ── Quick Action Cards (2-column Grid) ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {quickActions.map((item) => (
+          <div
+            key={item.to}
+            className="card border border-white/[0.07] hover:border-blue-500/30 transition-all duration-200 flex flex-col justify-between p-5 space-y-4 group"
+          >
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 rounded-xl bg-white/[0.05] border border-white/[0.08] flex items-center justify-center group-hover:scale-105 transition-transform">
+                  {item.icon}
+                </div>
+                <span className={`badge ${item.badgeClass}`}>{item.badge}</span>
               </div>
               <div>
-                <h3 className="font-semibold text-slate-800 mb-1">{f.title}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed">{f.description}</p>
+                <h3 className="font-bold text-slate-100 text-base mb-1">{item.title}</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">{item.desc}</p>
               </div>
             </div>
-          ))}
-        </div>
-      </section>
 
-      {/* Contract info */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-        <div className="card bg-slate-50 border-slate-200 text-center">
-          <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">
-            Deployed Contract
-          </p>
-          <p className="font-mono text-sm text-slate-700 break-all">
+            <div className="pt-2 border-t border-white/[0.05]">
+              <Link to={item.to} className={`${item.btnClass} w-full justify-center text-xs py-2`}>
+                {item.btnText}
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Deployed Contract Section Card ── */}
+      <div className="card border border-white/[0.07] space-y-3">
+        <div className="flex items-center justify-between pb-3 border-b border-white/[0.07]">
+          <div className="flex items-center gap-2">
+            <Hash className="w-4 h-4 text-blue-400" />
+            <span className="text-sm font-bold text-slate-200">Deployed Soroban Contract</span>
+          </div>
+          <span className="text-xs text-emerald-400 font-mono flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse" />
+            Stellar Testnet
+          </span>
+        </div>
+
+        <p className="text-xs text-slate-400">
+          All smart contract methods and state verifications execute directly on Stellar Soroban.
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-black/25 p-3.5 rounded-xl border border-white/[0.06]">
+          <span className="font-mono text-xs text-slate-300 break-all select-all">
             {import.meta.env.VITE_CONTRACT_ID}
-          </p>
+          </span>
           <a
             href={`https://stellar.expert/explorer/testnet/contract/${import.meta.env.VITE_CONTRACT_ID}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-brand-600 hover:text-brand-700 mt-2"
+            className="btn-secondary text-xs px-3 py-1.5 shrink-0 inline-flex items-center gap-1.5"
           >
-            View on Stellar Expert ↗
+            Explorer
+            <ExternalLink className="w-3 h-3" />
           </a>
         </div>
-      </section>
+      </div>
     </div>
   )
 }

@@ -44,22 +44,21 @@ export default function VerifyCertificate() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-12">
-
       {/* Page header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-11 h-11 rounded-2xl bg-emerald-600 flex items-center justify-center shadow-md shadow-emerald-200">
-            <ShieldCheck className="w-5 h-5 text-white" />
+          <div className="w-11 h-11 rounded-2xl bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center shadow-lg shadow-emerald-900/20">
+            <ShieldCheck className="w-5 h-5 text-emerald-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-extrabold text-slate-800">Verify Certificate</h1>
-            <p className="text-sm text-slate-500">Check the authenticity of any certificate on-chain</p>
+            <h1 className="text-2xl font-extrabold text-white">Verify Certificate</h1>
+            <p className="text-sm text-slate-400">Check the authenticity of any certificate on-chain</p>
           </div>
         </div>
       </div>
 
       {/* Search card */}
-      <div className="card mb-6">
+      <div className="card border border-white/[0.07] mb-6">
         <form onSubmit={handleSearch} className="space-y-4">
           <div>
             <label className="label">Certificate ID</label>
@@ -89,7 +88,7 @@ export default function VerifyCertificate() {
           </div>
 
           {/* Hint */}
-          <div className="flex items-start gap-2 text-xs text-slate-400 bg-slate-50 rounded-xl px-3 py-2.5">
+          <div className="flex items-start gap-2 text-xs text-slate-400 bg-white/[0.04] border border-white/[0.06] rounded-xl px-3.5 py-2.5">
             <Info className="w-3.5 h-3.5 mt-0.5 shrink-0 text-slate-400" />
             Enter the exact Certificate ID as issued. Verification reads directly from the Stellar blockchain — no login required.
           </div>
@@ -100,7 +99,7 @@ export default function VerifyCertificate() {
       {loading && (
         <div className="flex flex-col items-center justify-center py-16 gap-3">
           <Spinner size="lg" />
-          <p className="text-sm text-slate-500">Querying Stellar blockchain…</p>
+          <p className="text-sm text-slate-400">Querying Stellar blockchain…</p>
         </div>
       )}
 
@@ -116,7 +115,7 @@ export default function VerifyCertificate() {
       {/* Result */}
       {!loading && cert && (
         <div className="space-y-3">
-          <div className="flex items-center gap-2 text-sm font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-2.5">
+          <div className="flex items-center gap-2 text-sm font-semibold text-emerald-400 bg-emerald-500/15 border border-emerald-500/20 rounded-xl px-4 py-2.5">
             <ShieldCheck className="w-4 h-4" />
             Certificate found and verified on-chain
           </div>

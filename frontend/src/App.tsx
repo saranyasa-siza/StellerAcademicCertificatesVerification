@@ -9,7 +9,7 @@ import StarfieldOverlay from './components/StarfieldOverlay'
 
 export default function App() {
   return (
-    <div className="min-h-screen flex flex-col relative bg-[#020818] selection:bg-blue-600 selection:text-white overflow-x-hidden max-w-full">
+    <div className="min-h-screen flex flex-col relative bg-[#020818] selection:bg-blue-600 selection:text-white">
       {/* ── COSMIC BACKGROUND — preserves exact theme ── */}
       <div
         aria-hidden="true"
@@ -22,12 +22,12 @@ export default function App() {
       </div>
 
       {/* ── FULL-PAGE INTERACTIVE PARTICLE STARFIELD OVERLAY (SCROLLS WITH PAGE + DEPTH ZOOM) ── */}
-      <StarfieldOverlay particleCount={280} interactionRadius={140} />
+      <StarfieldOverlay particleCount={420} interactionRadius={150} />
 
       {/* ── All real content sits above the background & particle overlay ── */}
-      <div className="relative z-10 flex flex-col flex-1 max-w-full overflow-x-hidden">
+      <div className="relative z-10 flex flex-col flex-1 min-h-screen">
         <Navbar />
-        <main className="flex-1 max-w-full overflow-x-hidden">
+        <main className="flex-1">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/issue" element={<IssueCertificate />} />
@@ -36,7 +36,7 @@ export default function App() {
             <Route path="/send" element={<SendXLM />} />
           </Routes>
         </main>
-        <footer className="py-6 text-center text-sm text-slate-400 border-t border-white/[0.06] bg-[#020818]/80 backdrop-blur-sm max-w-full">
+        <footer className="py-6 text-center text-sm text-slate-400 border-t border-white/[0.06] bg-[#020818]/80 backdrop-blur-sm">
           CertChain — Powered by Stellar Soroban · Testnet
         </footer>
       </div>
