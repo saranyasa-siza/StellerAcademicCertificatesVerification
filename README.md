@@ -317,7 +317,7 @@ VITE_RPC_URL=https://soroban-testnet.stellar.org
 VITE_NETWORK=testnet
 ```
 ## Demo Video
-https://drive.google.com/file/d/1C-a3aEQ4QCATM9sjyQY3Y44_ZHWgIe6T/view?usp=sharing
+https://drive.google.com/file/d/1PNlLozacxvTYxmKj3lwaKEA8N-waAqyx/view?usp=sharing
 
 ## Screenshots (Mobile Responsive UI)
 <img width="497" height="770" alt="Screenshot 2026-08-30 133139" src="https://github.com/user-attachments/assets/ce4b92e2-d9bf-47df-be39-704701fb73d3" />
