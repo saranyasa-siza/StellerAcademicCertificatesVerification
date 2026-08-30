@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
@@ -6,28 +5,29 @@ import IssueCertificate from './pages/IssueCertificate'
 import VerifyCertificate from './pages/VerifyCertificate'
 import MyCertificates from './pages/MyCertificates'
 import SendXLM from './pages/SendXLM'
-import GravityParticles, {
-  GravityParticlesConfig,
-  DEFAULT_PARTICLE_CONFIG,
-} from './components/GravityParticles'
-import ParticleControls from './components/ParticleControls'
+import StarfieldOverlay from './components/StarfieldOverlay'
 
 export default function App() {
-  const [particleConfig, setParticleConfig] =
-    useState<GravityParticlesConfig>(DEFAULT_PARTICLE_CONFIG)
-
   return (
-    <div className="min-h-screen flex flex-col relative bg-slate-900/5 selection:bg-brand-500 selection:text-white">
-      {/* Interactive Gravity Particle Canvas Background */}
-      <GravityParticles config={particleConfig} />
+    <div className="min-h-screen flex flex-col relative bg-[#020818] selection:bg-blue-600 selection:text-white overflow-x-hidden max-w-full">
+      {/* ── COSMIC BACKGROUND — preserves exact theme ── */}
+      <div
+        aria-hidden="true"
+        className="fixed inset-0 z-0 overflow-hidden pointer-events-none select-none max-w-full"
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_40%,#0a1a3a_0%,#020818_65%)]" />
+        <div className="absolute top-[-8%] left-[-6%] w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[48px]" />
+        <div className="absolute top-[5%] right-[-10%] w-[520px] h-[520px] bg-indigo-600/10 rounded-full blur-[56px]" />
+        <div className="absolute bottom-[0%] left-[30%] w-[460px] h-[460px] bg-violet-600/10 rounded-full blur-[64px]" />
+      </div>
 
-      {/* Floating Control Toolbar */}
-      <ParticleControls config={particleConfig} onChange={setParticleConfig} />
+      {/* ── FULL-PAGE INTERACTIVE PARTICLE STARFIELD OVERLAY (SCROLLS WITH PAGE + DEPTH ZOOM) ── */}
+      <StarfieldOverlay particleCount={280} interactionRadius={140} />
 
-      {/* Main Content UI */}
-      <div className="relative z-10 flex flex-col flex-1">
+      {/* ── All real content sits above the background & particle overlay ── */}
+      <div className="relative z-10 flex flex-col flex-1 max-w-full overflow-x-hidden">
         <Navbar />
-        <main className="flex-1">
+        <main className="flex-1 max-w-full overflow-x-hidden">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/issue" element={<IssueCertificate />} />
@@ -36,7 +36,7 @@ export default function App() {
             <Route path="/send" element={<SendXLM />} />
           </Routes>
         </main>
-        <footer className="py-6 text-center text-sm text-slate-500/80 border-t border-slate-200/50 backdrop-blur-sm bg-white/40">
+        <footer className="py-6 text-center text-sm text-slate-400 border-t border-white/[0.06] bg-[#020818]/80 backdrop-blur-sm max-w-full">
           CertChain — Powered by Stellar Soroban · Testnet
         </footer>
       </div>
